@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <link rel="dns-prefetch" href="https://tonjar.github.io">
+  <title>Tonjar</title>
+<meta name="viewport" content="width=device-width">
+<script src="//cdn1.lncld.net/static/js/3.6.0/av-min.js"></script>
+<script src="js/base.js"></script>
+ <link rel="stylesheet" href="css/game.css">
+ <link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/markdown.css">
+
+</head>
+<body>
+
+    <div class="mainpage"id="mainpage">
+        <div class="gamepart" id="game">
+            <iframe class="card"></iframe>
+        </div>
+    </div>
+    <div class="sidebar"id="sidebar"></div>
+    <script src="js/game.js"></script>
+    <script src="js/sidebar.js"></script>
+    <script src="js/markdown.js"></script>
+    <script src="js/commit.js"></script>
+    <script>
+        RULE=sidebar.appendChild(document.createElement("div"))
+        RULE.setAttribute("class","game-rule")
+        bt=sidebar.children[2].appendChild(document.createElement("button"))
+        bt.innerHTML="游戏规则"
+        bt.setAttribute("class","game-rule-bt")
+        bt.setAttribute("onclick","javascript:RULE.style.visibility='visible'")
+        RULE.appendChild(document.createElement("p")).innerHTML="游戏规则："
+        var URLinfo=location.search.substr(4)
+        for(var i=0;;i++){
+            if(i==GameIndex.length){
+                bt.style.visibility="hidden"
+                alert("No this game")
+                break;
+            }
+            if(URLinfo==Gamehref[i]){
+                document.getElementById("game").children[0].src="games/"+URLinfo+".html"
+                RULE.appendChild(document.createElement("p")).innerHTML=Gamerules[i];
+                pagename="game_"+URLinfo
+                break;
+            }
+        }
+        bt=RULE.appendChild(document.createElement("button"))
+        bt.innerHTML="关闭"
+        bt.setAttribute("onclick","javascript:RULE.style.visibility='hidden'")
+        apply_commit()
+    </script>
+</body>
+</html>
+

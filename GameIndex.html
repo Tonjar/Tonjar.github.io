@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <link rel="dns-prefetch" href="https://tonjar.github.io">
+  <title>Tonjar</title>
+<meta name="viewport" content="width=device-width">
+<script src="//cdn1.lncld.net/static/js/3.6.0/av-min.js"></script>
+<script src="js/base.js"></script>
+ <link rel="stylesheet" href="css/game.css">
+ <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+
+    <div class="mainpage"id="mainpage">
+    
+    </div>
+    <div class="sidebar"id="sidebar"></div>
+    <script src="js/sidebar.js"></script>
+    <script src="js/game.js"></script>
+    <script>
+        for(var i=0;i<GameIndex.length;i++){
+            var c=mainpage.appendChild(document.createElement("div"))
+            c.setAttribute("class","gamecard")
+            var h=c.appendChild(document.createElement("h1")).appendChild(document.createElement("a"))
+            h.innerHTML=GameIndex[i];
+            h.href="game.html?id="+Gamehref[i]
+            c.appendChild(document.createElement("p")).innerHTML="游戏规则：";
+            h=c.appendChild(document.createElement("p"))
+            h.style.margin="0px 10px 0px 20px"
+            h=h.appendChild(document.createElement("a"))
+            h.innerHTML=Gamerules[i];
+            h.href="game.html?id="+Gamehref[i]
+
+        }
+        
+    </script>
+</body>
+</html>
+

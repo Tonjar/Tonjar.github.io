@@ -1,0 +1,47 @@
+.gamecard{
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    margin: 30px 10px;
+    padding: 10px;
+    background: white;
+    width: 300px;
+    display: inline-table;
+    min-height: 300px;
+}
+
+.gamepart{
+    text-align: center;
+    height: 600px;
+    padding-top: 50px;
+}
+.gamepart iframe{
+    width: 600px;
+    height: 600px;
+    background: white;
+    border: none;
+    margin: 0 auto;
+}
+
+.game-rule{
+    background: #fffbf4;
+    width: 300px;
+    height: 350px;
+    position: absolute;
+    top: 250px;
+    visibility:hidden;
+}
+.game-rule p{
+    margin:0px 10px;
+}
+.game-rule button{
+    border: none;
+    cursor: pointer;
+    outline: none;
+    position: relative;
+    left: 120px;
+    top: 30px;
+}
+.game-rule-bt{
+    border: none;
+    cursor: pointer;
+    outline: none;
+}

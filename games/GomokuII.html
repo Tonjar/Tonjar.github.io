@@ -1,0 +1,527 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>五子棋(无禁手)</title>
+</head>
+
+<body>
+
+<div style="padding-left:10%">
+<input type="button" id="w" onclick="change_white()" value="白棋：人类">
+<input type="button" id="b" onclick="change_black()" value="黑棋：人类">
+<button style="position:fixed;right:20%" onclick="restart()">重新开始</button>
+<input type="button" id="h" style="position:fixed;right:9%" onclick="withdraw()" disabled="disabled" value="悔棋">
+</div>
+<div style="width:80%;height:0;padding-left:10%">
+    <canvas id="chess" style="position:fixed;top:55px;box-shadow:-2px -2px 2px #EFEFEF ,5px 5px 5px #B9B9B9"></canvas>
+    <canvas id="zi" width="450px" height="450px" style="position:fixed;top:55px;"></canvas>
+
+</div>
+<br>
+
+<br>
+<script type="text/javascript">
+	//参数
+    window.addEventListener("resize", resizeCanvas, false);
+
+    Width=0;
+    function resizeCanvas() {
+        Width=window.innerWidth*0.8;
+        if(window.innerWidth*0.8>window.innerHeight*0.8)
+            Width=window.innerHeight*0.8
+        chess.width=chess.height=Width;
+        document.getElementById("zi").width=document.getElementById("zi").height=Width;
+        drawchess();
+    }
+
+    var id_setTimeout;
+
+	var chess = document.getElementById("chess");
+	var context_luozi = document.getElementById("zi").getContext("2d");
+	var context = chess.getContext("2d");
+	var black =true;//标记目前落子方
+	var person1 =true,person2=true;
+	var chessBoard = []//棋盘
+    var stack=[]//落子栈
+    var stack_it=0
+	for(var i=0;i<15;i++){
+		chessBoard[i]=[]
+		for(var j=0;j<15;j++){
+			chessBoard[i][j]=0;
+		}
+	}
+	var turn = 1;//轮数
+	var computerflag=true;//是否让电脑落子（用在终盘后停止落子）
+
+    Distance=[]
+    ScoreS=[]
+    estimateScore=[0,0]
+    for(var i=0;i<15;i++){
+        Distance[i]=[]
+        ScoreS[i]=[]
+        for(var j=0;j<15;j++){
+            Distance[i][j]=0;
+            ScoreS[i][j]=[0,0];
+        }
+    }
+
+
+
+    //初始化参数
+	function restart(){
+        estimateScore=[0,0]
+		for(var i=0;i<15;i++){
+			for(var j=0;j<15;j++){
+				chessBoard[i][j]=Distance[i][j]=0;
+                ScoreS[i][j]=[0,0];
+			}
+		}
+        stack_it=0
+        Width=window.innerWidth*0.8;
+        if(window.innerWidth*0.8>window.innerHeight*0.8)
+            Width=window.innerHeight*0.8
+        chess.width=chess.height=Width;
+        document.getElementById("zi").width=document.getElementById("zi").height=Width;
+        drawchess();
+
+        black = true;
+		turn = 1;
+		computerflag=true;
+        document.getElementById("h").disabled=true;
+		context_luozi.clearRect(0,0,Width,Width);
+		chess.onclick=set_chess_click();
+		clearTimeout(id_setTimeout);
+        if(!person1)
+			onestep(7,7);
+		
+	}
+    restart()
+    
+    function CLIck(e){
+		onestep(Math.floor(e.offsetX/Width*15),Math.floor(e.offsetY/Width*15));
+    }
+
+    //捕捉鼠标点击落子
+	function set_chess_click(){
+		document.getElementById("zi").onclick=CLIck
+	}
+
+
+    //电脑/人 切换
+	function change_white(){
+		person2=!person2;
+		if(person2)
+			document.getElementById("w").value="白棋：人类";
+		else{
+			document.getElementById("w").value="白棋：电脑";
+          //  document.getElementById("h").style.display="none"
+        }
+		if(!person2&&!black&&computerflag)
+			computer();
+	}
+	function change_black(){
+		person1=!person1;
+		if(person1)
+			document.getElementById("b").value="黑棋：人类";
+		else{
+			document.getElementById("b").value="黑棋：电脑";
+         //   document.getElementById("h").style.display="none"
+        }
+		if(!person1&&black&&computerflag)
+			computer();
+	}
+	
+
+    //画棋盘
+
+	function drawchess(){
+        var iva=Width/30
+		context.strokeStyle="#BFBFBF";
+		for(var i=0;i<15;i++){
+			context.moveTo(iva+i*iva*2,iva);
+			context.lineTo(iva+i*iva*2,Width-iva);
+			context.stroke();
+			context.moveTo(iva,iva+i*iva*2);
+			context.lineTo(Width-iva,iva+i*iva*2);
+			context.stroke();
+		}
+		context.fillStyle="#808080"
+		context.beginPath();context.arc(iva+6*iva,iva+6*iva,3,0,2*Math.PI);context.fill();context.closePath();
+		context.beginPath();context.arc(iva+6*iva,iva+22*iva,3,0,2*Math.PI);context.fill();context.closePath();
+		context.beginPath();context.arc(iva+22*iva,iva+6*iva,3,0,2*Math.PI);context.fill();context.closePath();
+		context.beginPath();context.arc(iva+22*iva,iva+22*iva,3,0,2*Math.PI);context.fill();context.closePath();
+		context.beginPath();context.arc(iva+14*iva,iva+14*iva,4,0,2*Math.PI);context.fill();context.closePath();
+        BoW=1
+        for(var i=0;i<stack_it;i++){
+            draw_one(stack[i][0],stack[i][1],BoW,i+2)
+            BoW=BoW^1
+        }
+    }
+
+    //悔棋
+    var withdraw=function(){
+        if(turn<2||(person1==0&&person2==0))return;
+        clear(stack[stack_it-1][0],stack[stack_it-1][1]);
+        update(stack[stack_it-1][0],stack[stack_it-1][1],-1)
+        stack_it--;
+        if(stack_it==0)
+            document.getElementById("h").disabled=true;
+        if(!person1&&black&&computerflag)
+			computer();
+        if(!person2&&!black&&computerflag)
+			computer();
+    }
+    //清除落子
+    var clear=function(i,j){
+        if(chessBoard[i][j]==0)return;
+        chessBoard[i][j]=0
+        if(!black)
+            console.log("black withdraw "+turn+" : "+i+" "+j);
+        else
+            console.log("white withdraw "+turn+" : "+i+" "+j);
+        turn--;
+		context_luozi.clearRect(i*Width/15,j*Width/15,Width/15,Width/15);  
+        black=!black
+    }
+    //落子
+    var dx=[-1,-1,-1,0];
+    var dy=[-1,0,1,-1];
+
+    var draw_one=function(i,j,BorW,id){
+        var iva=Width/30
+        var gradient = context_luozi.createRadialGradient(iva+i*iva*2,iva+j*iva*2,iva*0.8,iva+i*iva*2,iva+j*iva*2,0);
+		if(BorW){
+		gradient.addColorStop(0,"#0A0A0A");
+		gradient.addColorStop(1,"#636766");
+		chessBoard[i][j]=1;
+		}
+		else{
+		gradient.addColorStop(0,"#D1D1D1");
+		gradient.addColorStop(1,"#F9F9F9");
+		chessBoard[i][j]=2;
+		}
+		context_luozi.fillStyle=gradient;
+		context_luozi.beginPath();
+		context_luozi.arc(iva+i*iva*2,iva+j*iva*2,iva,0,2*Math.PI);
+		context_luozi.fill();
+		context_luozi.closePath();
+		context_luozi.font="10px light";
+		if(BorW)
+			context_luozi.fillStyle="white";
+		else
+			context_luozi.fillStyle="black";
+		if(id<=10)
+			context_luozi.fillText(id-1,iva*0.8+i*iva*2,iva*1.2+j*iva*2)
+		else if(id<=100)
+			context_luozi.fillText(id-1,9+i*iva*2,iva*1.2+j*iva*2)
+		else
+			context_luozi.fillText(id-1,5+i*iva*2,iva*1.2+j*iva*2)
+
+    }
+
+	var onestep = function(i,j){
+       	if(chessBoard[i][j]!=0)return;
+		//
+		if(black)
+			console.log("black "+turn+" : "+i+" "+j);
+		else
+			console.log("white "+turn+" : "+i+" "+j);
+		turn++;
+        document.getElementById("h").disabled=false;
+		//
+        stack[stack_it]=[i,j];
+        stack_it++;
+		draw_one(i,j,black,turn)
+        update(i,j)
+		//上面是落子 + 画棋子
+        //下面判断有无胜利
+		black=!black;
+        if(iswin(i,j)){
+            if(!black){
+                alert('黑棋胜')
+                computerflag=false;
+                console.log("black win");
+                document.getElementById("h").disabled=true;
+                return document.getElementById("zi").onclick=null;
+            }
+			else{
+			    alert('白棋胜')
+				console.log("white win");
+				computerflag=false;
+                document.getElementById("h").disabled=true;
+				return document.getElementById("zi").onclick=null;				
+			}
+        }
+		if(turn==226){
+			alert('平局')
+			console.log("nobody win");
+			computerflag=false;		
+            document.getElementById("h").disabled=true;
+			return document.getElementById("zi").onclick=null;
+		}
+		if((!black&&!person2)||(black&&!person1)){
+			if(computerflag)id_setTimeout=setTimeout("computer()",150);
+			document.getElementById("zi").onclick=null;
+		}
+		else{
+			document.getElementById("zi").onclick=CLIck
+            //judge_score();
+		}
+	}
+    
+    //AI程序
+
+
+
+    var culDistance=function(x,y,d=1){
+        for(var i=-3;i<4;i++)
+            for(var j=-3;j<4;j++){
+                if(i+x<0||j+y<0||i+x>=15||j+y>=15)continue;
+                Distance[i+x][j+y]+=d;
+            }
+    }
+
+    var iswin=function(i,j){
+		for(var k=0;k<4;k++){
+            var WIN=0;
+            var ti=i;
+            var tj=j;
+            while(ti+dx[k]>=0&&tj+dy[k]>=0&&tj+dy[k]<15&&chessBoard[ti+dx[k]][tj+dy[k]]==chessBoard[i][j]){
+                ti=ti+dx[k];
+                tj=tj+dy[k];
+            }
+            while(ti-dx[k]<15&&tj-dy[k]>=0&&tj-dy[k]<15&&chessBoard[ti-dx[k]][tj-dy[k]]==chessBoard[i][j]){
+                ti=ti-dx[k];
+                tj=tj-dy[k];
+                WIN++;
+            }
+            if(WIN==4)
+                return true;
+        }
+        return false;
+    }
+    
+    scores=[0,3,9,25]
+    var updateScoreS=function(x,y){
+        for(var p=1;p<3;p++){
+            chessBoard[x][y]=p;
+            var scotmp=0;
+            for(var k=0;k<4;k++){
+                var WIN=0;
+                var ti=x;
+                var tj=y;
+                while(ti+dx[k]>=0&&tj+dy[k]>=0&&tj+dy[k]<15&&chessBoard[ti+dx[k]][tj+dy[k]]==p){
+                    ti=ti+dx[k];
+                    tj=tj+dy[k];
+                }
+                while(ti-dx[k]<15&&tj-dy[k]>=0&&tj-dy[k]<15&&chessBoard[ti-dx[k]][tj-dy[k]]==p){
+                    ti=ti-dx[k];
+                    tj=tj-dy[k];
+                    WIN++;
+                }
+                if(WIN==4)scotmp+=1e9
+                else if(WIN>4)scotmp;
+                else scotmp+=scores[WIN];
+            }
+            estimateScore[p-1]+=scotmp-ScoreS[x][y][p-1]
+            ScoreS[x][y][p-1]=scotmp
+        }
+        chessBoard[x][y]=0;
+    }
+    var updatescore=function(x,y){
+        if(chessBoard[x][y]==0)
+            updateScoreS(x,y)
+        for(var k=0;k<4;k++){
+            var ti=x,tj=y;
+            if(ti+dx[k]>=0&&tj+dy[k]>=0&&tj+dy[k]<15){
+                if(chessBoard[x+dx[k]][y+dy[k]]!=0){
+                    while(ti+dx[k]>=0&&tj+dy[k]>=0&&tj+dy[k]<15&&chessBoard[ti+dx[k]][tj+dy[k]]==chessBoard[x+dx[k]][y+dy[k]]){
+                        ti=ti+dx[k];
+                        tj=tj+dy[k];
+                    }
+                }
+                if(ti+dx[k]>=0&&tj+dy[k]>=0&&tj+dy[k]<15&&chessBoard[ti+dx[k]][tj+dy[k]]==0)
+                    updateScoreS(ti+dx[k],tj+dy[k])
+            }
+            ti=x;tj=y;
+            if(ti-dx[k]<15&&tj-dy[k]>=0&&tj-dy[k]<15){
+                if(chessBoard[x-dx[k]][y-dy[k]]!=0){
+                    while(ti-dx[k]<15&&tj-dy[k]>=0&&tj-dy[k]<15&&chessBoard[ti-dx[k]][tj-dy[k]]==chessBoard[x-dx[k]][y-dy[k]]){
+                        ti=ti-dx[k];
+                        tj=tj-dy[k];
+                    }
+                }
+                if(ti-dx[k]<15&&tj-dy[k]>=0&&tj-dy[k]<15&&chessBoard[ti-dx[k]][tj-dy[k]]==0)
+                    updateScoreS(ti-dx[k],tj-dy[k])
+            }
+
+        }
+    }
+    var update=function(x,y,d=1){
+        estimateScore[0]+=-d*ScoreS[x][y][0]
+        estimateScore[1]+=-d*ScoreS[x][y][1]
+        
+        culDistance(x,y,d)
+        updatescore(x,y)
+    }
+    var estimateI=function(p){
+        var x,y;
+        var cntZ=0;
+        for(var i=0;i<queuelength;i++){
+            [x,y]=queue[i]
+            if(chessBoard[x][y]!=0)continue;
+            for(var k=0;k<4;k++){
+                var WIN=0;
+                var ti=x;
+                var tj=y;
+                while(ti+dx[k]>=0&&tj+dy[k]>=0&&tj+dy[k]<15&&chessBoard[ti+dx[k]][tj+dy[k]]==p){
+                    ti=ti+dx[k];
+                    tj=tj+dy[k];
+                }
+                while(ti-dx[k]<15&&tj-dy[k]>=0&&tj-dy[k]<15&&chessBoard[ti-dx[k]][tj-dy[k]]==p){
+                    ti=ti-dx[k];
+                    tj=tj-dy[k];
+                    WIN++;
+                }
+                if(WIN==4)return 1e5;
+                if(WIN>4);
+                else cntZ+=scores[WIN];
+            }
+        }
+        return cntZ;
+    }
+    var estimate=function(p){
+        return estimateScore[p-1]-estimateScore[2-p];
+    }
+
+    queue=[],queuelength=0;
+
+    var dfs=function(player,cntTurn,x,y,dep=2,alpha=-1e9,beta=1e9){
+        if(iswin(x,y))return -1e9;
+        if(cntTurn==226)return 0;
+        if(dep==0)return estimate(player);
+        var x,y;
+        for(var i=0;i<queuelength;i++){
+            [x,y]=queue[i]
+            if(chessBoard[x][y]!=0||Distance[x][y]==0)continue;
+            chessBoard[x][y]=player;
+            update(x,y)
+            var sco=-dfs(3-player,cntTurn+1,x,y,dep-1,-beta,-alpha)
+            chessBoard[x][y]=0;
+            update(x,y,-1)
+            alpha=alpha<sco?sco:alpha;
+            if(alpha>=beta)return alpha;
+        }
+        return alpha;
+    }
+
+    var pushinqueue=function(){
+        queuelength=0;
+        for(var i=4;i<=10;i++){
+            for(var j=4;j<=10;j++){
+                if(chessBoard[i][j]!=0)continue;
+                queue[queuelength]=[i,j]
+                queuelength++;
+            }
+        }
+        for(var i=0;i<4;i++){
+            for(var j=0;j<15;j++){
+                if(chessBoard[i][j]==0){
+                    queue[queuelength]=[i,j]
+                    queuelength++;
+                }
+                if(chessBoard[14-i][j]==0){
+                    queue[queuelength]=[14-i,j]
+                    queuelength++;
+                }
+            }
+        }
+        for(var i=4;i<=10;i++){
+            for(var j=0;j<4;j++){
+                if(chessBoard[i][j]==0){
+                    queue[queuelength]=[i,j]
+                    queuelength++;
+                }
+                if(chessBoard[i][14-j]==0){
+                    queue[queuelength]=[i,14-j]
+                    queuelength++;
+                }
+            }
+        }
+    }
+
+	var computer =function(){
+		if(turn==1)
+			return onestep(7,7);
+        var player=0;
+        if(black)
+            player=2;
+        else
+            player=1;
+        var FLAG=0
+        var XY=[]
+        pushinqueue();
+        var Msco=-1e9;
+        var xyQ=[]
+        var x,y;
+        for(var i=0;i<15;i++){
+            for(var j=0;j<15;j++){
+                if(chessBoard[i][j]!=0)continue;
+                if(ScoreS[i][j][2-player]>1e4)return onestep(i,j)
+                if(ScoreS[i][j][player-1]>1e4){
+                    FLAG++
+                    XY=[i,j]
+                }
+            }
+        }
+        if(FLAG>0)return onestep(XY[0],XY[1])
+        for(var i=0;i<queuelength;i++){
+            [x,y]=queue[i]
+            if(Distance[x][y]==0)continue;
+            chessBoard[x][y]=3-player;
+            update(x,y)
+            var Scco=-dfs(player,turn,x,y,3,-1e9,Msco==-1e9?1e9:-Msco+1);
+            chessBoard[x][y]=0;
+            update(x,y,-1)
+            if(Scco>Msco){
+                Msco=Scco
+                xyQ=[]
+            }
+            if(Scco==Msco)
+                xyQ.push([x,y])
+        }
+        if(Msco<-1e7&&turn<200&&xyQ.length/(225-turn)>0.5){
+            var max=-1
+            XY=[]
+            for(var i=0;i<15;i++){
+                for(var j=0;j<15;j++){
+                    if(chessBoard[i][j]!=0)continue;
+                    if(max<Math.abs(ScoreS[i][j][0])+Math.abs(ScoreS[i][j][1])){
+                        max=Math.abs(ScoreS[i][j][0])+Math.abs(ScoreS[i][j][1])
+                        XY=[i,j]
+                    }
+                }
+            }
+            return onestep(XY[0],XY[1])
+        }
+        [x,y]=xyQ[Math.floor(Math.random()*xyQ.length)]
+        onestep(x,y)
+	}
+	
+
+	if(!person1)
+		onestep(7,7);
+	if(person2)
+		document.getElementById("w").value="白棋：人类";
+	else
+		document.getElementById("w").value="白棋：电脑";
+	if(person1)
+		document.getElementById("b").value="黑棋：人类";
+	else
+		document.getElementById("b").value="黑棋：电脑";
+	document.getElementById("zi").onclick=CLIck	
+</script>
+
+</body>
+</html>

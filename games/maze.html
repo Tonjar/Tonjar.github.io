@@ -1,0 +1,160 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Tonjar</title>
+    <style>
+    span{
+        width: 12px;
+        height: 12px;
+        float: left;
+        background: #dddd;
+        border:4px gray outset;
+    }
+
+    .road{
+        visibility: hidden;
+    }
+    </style>
+  </head>
+  <body id="CRL" onkeydown="control(event)" onclick="clickcontrol(event)">
+    <div style="position:fixed;top:5px;left:5px;">
+        <input type="button" style="width: 50px;" value="START" onclick="start()">
+        <label for="width">Width:</label>
+        <input id="width" style="width: 30px;" value="30" onkeydown="check(event)">
+        <label for="height">Height:</label>
+        <input id="height" style="width: 30px;" value="30" onkeydown="check(event)">
+
+    </div>
+    <div id="body" style=" position:absolute;top:30px">
+    </div>
+    <script>
+        MAZE=[]
+        Width=30
+        Height=30
+        var Maze=[[1],[1,1]]
+        x=1
+        y=0
+
+        var start=function(){
+            if(MAZE.length!=0){
+                for(var i=0;i<Height;i++)
+                    for(var j=0;j<Width;j++)
+                        Body.removeChild(MAZE[i][j])
+            }
+            Width=parseInt(document.getElementById("width").value)
+            Height=parseInt(document.getElementById("height").value)
+            initMaze()
+            document.getElementById("CRL").onkeydown=control
+            document.getElementById("CRL").onclick=clickcontrol
+        }
+        var initMaze=function(){
+            for(var i=0;i<Height;i++){
+                Maze[i]=[]
+                for(var j=0;j<Width;j++)
+                    Maze[i][j]=1
+            }
+            dx=[0,1,0,-1]
+            dy=[1,0,-1,0]
+            dfs(Math.floor(Height/2),Math.floor(Width/2))
+            X=Height-2
+            Y=Width-1
+            while(Maze[X][Y]!=0&&Y>0){
+                Maze[X][Y]=0;
+                Y--;
+            }
+            X=1
+            Y=0
+            while(Maze[X][Y]!=0&&Y<Width){
+                Maze[X][Y]=0;
+                Y++;
+            }
+            Body=document.getElementById("body")
+            Body.style.width=Width*20+"px"
+            Body.style.height=Height*20+"px"
+            for(var i=0;i<Height;i++){
+                MAZE[i]=[]
+                for(var j=0;j<Width;j++){
+                    MAZE[i][j]=Body.appendChild(document.createElement("span"))
+                    if(Maze[i][j]==0){
+                        MAZE[i][j].style.visibility='hidden'
+                        MAZE[i][j].style.background='red'
+                        MAZE[i][j].style.border="4px white outset"
+                    }
+                }
+            }
+            MAZE[1][0].style.visibility=''
+            
+            x=1
+            y=0
+        }
+        
+        var dfs=function(x,y){
+            Maze[x][y]=0
+            for(var i=0;i<4;i++){
+                X=x+dx[i]
+                Y=y+dy[i]
+                if(X<1||Y<1||X>=Height-1||Y>=Width-1||Maze[X][Y]==0)continue;
+                Maze[X][Y]++;
+            }
+            for(var i=0;i<10;i++){
+                k=Math.floor(Math.random()*4)
+                X=x+dx[k]
+                Y=y+dy[k]
+                if(X<1||Y<1||X>=Height-1||Y>=Width-1||Maze[X][Y]==0)continue;
+                if(Maze[X][Y]==2)dfs(X,Y);
+            }
+        }
+        
+        var move=function(d){
+            X=x+dx[d]
+            Y=y+dy[d]
+            if(X==Height-2&&Y==Width-1){
+                MAZE[x][y].style.visibility='hidden'
+                MAZE[X][Y].style.visibility=''
+                x=X
+                y=Y
+                return win();
+            }
+            if(X<1||Y<1||X>=Height-1||Y>=Width-1||Maze[X][Y]!=0)return;
+            MAZE[x][y].style.visibility='hidden'
+            MAZE[X][Y].style.visibility=''
+            x=X
+            y=Y
+            return false;
+        }
+        var control=function(e){
+            if(e.key=='w'||e.key=='W'||e.key=='ArrowUp')return move(3)
+            if(e.key=='a'||e.key=='A'||e.key=='ArrowLeft')return move(2)
+            if(e.key=='s'||e.key=='S'||e.key=='ArrowDown')return move(1)
+            if(e.key=='d'||e.key=='D'||e.key=='ArrowRight')return move(0)
+        }
+        var clickcontrol=function(e){
+            X=e.screenX/screen.width
+            Y=e.screenY/screen.height
+            if(X>Y){
+                if(1>X+Y)return move(3)
+                return move(0)
+            }
+            else if(1>X+Y)return move(2)
+            return move(1)
+        }
+        var win=function(){
+            alert("win");
+            document.getElementById("CRL").onkeydown=''
+            document.getElementById("CRL").onclick=''
+        }
+        var check=function(e){
+            numcheck=/^[1-9]\d*$/
+            if(!/\d/.test(e.key)){
+                console.log(e.key)
+                return false;
+            }
+            console.log(numcheck.test(document.getElementById("width").value))
+            return true
+        }
+        start()
+        document.getElementById("CRL").focus()
+    </script>
+  </body>
+</html>

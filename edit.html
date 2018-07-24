@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <link rel="dns-prefetch" href="https://tonjar.github.io">
+  <title>Tonjar</title>
+<meta name="viewport" content="width=device-width">
+<script src="//cdn1.lncld.net/static/js/3.6.0/av-min.js"></script>
+<script src="js/base.js"></script>
+
+ <link rel="stylesheet" href="css/main.css">
+ <link rel="stylesheet" href="css/markdown.css">
+<style>
+.markdown-write{
+    position: relative;
+    height: 620px;
+    background: antiquewhite;
+    width: 48%;
+    top: 50px;
+    left: 2%;
+    max-width: 43%;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    border-radius: 20px;
+    margin: 0px 0px 80px 0px;
+    padding: 0;
+    display: inline-block;
+}
+.markdown-w{
+position: relative;
+    width: 93%;
+    height: 91%;
+    top: 20px;
+    left: 1%;
+    border-radius: 20px;
+    resize: none;
+    padding: 2%;
+    margin: 0;
+    background: antiquewhite;
+    border: 1px dashed darkgoldenrod;
+    outline: none;
+    font-size: medium;
+}
+
+
+.markdown-show{
+    position: relative;
+    height: 600px;
+    left: 30px;
+    top: 50px;
+    overflow-y: overlay;
+    overflow-x: hidden;
+    padding: 10px 20px;
+    width: 48%;
+    border-radius: 20px;
+    margin: 0px 0px 80px 0px;
+    display: inline-block; 
+}
+
+</style>
+</head>
+<body>
+
+    <div class="mainpage"id="mainpage">
+    <div class="card" style="margin-bottom: 0;"id="head"></div>
+    <div class="markdown-write card"><textarea id="doc" class="markdown-w"></textarea></div>
+    <div id="show" class="markdown-show card"></div>
+    <div id="span" class="card" style="width: fit-content;position:fixed;bottom:10px">
+        <button onclick="post()">发布</button>
+        <button onclick="update()">预览</button>
+        <button>同步预览</button>
+        <button>下载</button>
+    </div>
+    </div>
+    <div class="sidebar"id="sidebar"></div>
+
+    <script src="js/sidebar.js"></script>
+    <script >
+        var span=document.getElementById("span")
+        var write=document.getElementById("doc")
+        var show=document.getElementById("show")
+        function update(){
+            show.innerHTML=""
+            show.scrollTo(0,markdown(show,write.value,write.selectionEnd)[1]-200)
+        }
+        span.children[2].onclick=function(e){
+            if(write.oninput==null){
+                write.oninput=update
+                e.target.innerHTML="同步预览"
+            }
+            else{
+                write.oninput=null
+                e.target.innerHTML="手动预览"
+            }
+        }
+        span.children[2].click()
+        BIGgroup=["权限","设置"]
+        smallgroup=[["游客 浏览","游客 下载","授权用户 浏览","授权用户 下载"],["打赏","评论","分享"]]
+        option=[]
+        var group=mainpage.firstElementChild.appendChild(document.createElement("div"))
+        group.setAttribute("class","head-group-g")
+        group.style.width="60%"
+        doc_info=group.appendChild(document.createElement("textarea"))
+        doc_info.setAttribute("class","doc-info")
+        doc_info.value="标题:\n简介:\n\n\n\n\n\n\ntag:\n分类:\nend";
+
+
+        var head=mainpage.firstElementChild.appendChild(document.createElement("div"))
+        head.setAttribute("class","head-group-g")
+        head.style.position="absolute"
+        head.style.width="30%"
+        for(var i=0;i<BIGgroup.length;i++){
+            option[i]=[]
+            var group=head.appendChild(document.createElement("div"))
+            group.setAttribute("class","head-group")
+            var label=group.appendChild(document.createElement("p"))
+            label.innerHTML=BIGgroup[i]
+            label.setAttribute("class","head-group-label")
+            for(var j=0;j<smallgroup[i].length;j++){
+                var sgroup=group.appendChild(document.createElement("div"))
+                if(j==0)sgroup.setAttribute("class","head-group-first")
+                option[i][j]=sgroup.appendChild(document.createElement("input"))
+                option[i][j].type="checkbox"
+                option[i][j].checked=true;
+                sgroup.appendChild(document.createElement("p")).innerHTML=smallgroup[i][j]
+            }
+        }
+        bts=mainpage.children[2]
+
+
+        articles=AV.Object.extend("articles")
+        id=location.search.substr(4)
+        new_article=new articles()
+        if(id!=""&&id!="new"){
+            doc_info.value="waiting..."
+            var query_articles = new AV.Query('articles');
+            query_articles.equalTo("objectId",id)
+            query_articles.find().then(function(Articles){
+                if(Articles.length!=0){
+                    new_article=Articles[0];
+                    doc_info.value="标题:"+new_article.attributes.title+"\n简介:\n"+new_article.attributes.description+"\ntag:"+new_article.attributes.tags+"\n分类:"+new_article.attributes.categories+"\nend";
+                    option[0][0].checked=new_article.attributes.tourist
+                    option[0][1].checked=new_article.attributes.touristd
+                    option[0][2].checked=new_article.attributes.group2
+                    option[0][3].checked=new_article.attributes.group2d
+                    option[1][0].checked=new_article.attributes.money
+                    option[1][1].checked=new_article.attributes.commit
+                    option[1][2].checked=new_article.attributes.share
+                    document.getElementById("doc").value=new_article.attributes.article
+                }
+
+            },function(error){
+                doc_info.value="with error "+error;
+            })
+        }
+
+        function save_file(){
+            if(Hash(getCookie("UserPassword")+bts.bigmakepassword)!="hnfsmwcqolbclrgw")return;
+            var title=doc_info.value.substring(doc_info.value.search(/标题/)+3,doc_info.value.search(/\n/))
+            var desrip=doc_info.value.substring(doc_info.value.search(/简介/)+3,doc_info.value.search(/\ntag/))
+            var tags=doc_info.value.substring(doc_info.value.search(/tag/)+4,doc_info.value.search(/\n分类/))
+            var ges=doc_info.value.substring(doc_info.value.search(/分类/)+3,doc_info.value.search(/\nend/))
+            new_article.save({
+                "article":document.getElementById("doc").value,
+                "title":title,
+                "description":desrip,
+                "tags":tags,
+                "categories":ges,
+                "tourist":option[0][0].checked,
+                "touristd":option[0][1].checked,
+                "group2":option[0][2].checked,
+                "group2d":option[0][3].checked,
+                "money":option[1][0].checked,
+                "commit":option[1][1].checked,
+                "share":option[1][2].checked
+                    }).then(function(){
+                            alert("success")
+                        },function(){
+                            alert("fail post")
+                        }
+                        )
+
+        }
+        function post(){
+            var title=doc_info.value.substring(doc_info.value.search(/标题/)+3,doc_info.value.search(/\n/))
+            if(title.search(/^ *$/)==0)return;
+            if(level(getCookie("Usersalt")+bts.lp)!=2)return;
+            if(Hash(getCookie("UserPassword")+"t")!="liqdznpwyjbcyrgw")return;
+            save_file();
+        }
+    </script>
+</body>
+</html>

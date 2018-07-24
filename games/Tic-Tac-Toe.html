@@ -1,0 +1,303 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>圈叉游戏</title>
+
+<style>
+canvas{
+    height: max-content;
+    margin: 0px auto;
+    width: 100%;
+    display: inline-block;
+    background: white;
+}
+div{
+    padding-bottom: 32.66%;
+    height: 0;
+    margin: 0px auto;
+    width: 32.66%;
+    display: inline-block;
+    background: white;
+}
+img{
+    width: 80%;
+    margin: 10%;
+}
+    
+
+.button{
+    background: #ebebeb;
+    width: 100%;
+    margin: 10% 0 10% 15%;
+    text-align: center;
+    font-size:0.9em;
+}
+
+</style>
+</head>
+
+<body>
+<div id="chess" width="140px" height="140px" style="
+background: #bdb4b4;
+height:0;
+display: block;
+width:70%;
+padding-bottom: 70%;
+margin:0 0 0 25%;
+"></div>
+
+
+<div style="
+    position: absolute;
+    top: 0;
+    width: 20%;
+    height: 0;
+    padding-bottom: 70%;
+">
+
+<div class="button" id="w" onclick="change_o()">O:人类 </div>
+<div class="button" id="b" onclick="change_x()">X:人类 </div>
+<div class="button" id="h" onclick="withdraw()">悔棋 </div>
+<div class="button" onclick="restart()">重新开始 </div>
+
+</div>
+
+
+<br>
+<script type="text/javascript">
+	var chess = document.getElementById("chess");
+	var O =false;
+	var person_o =true,person_x =true;
+	var chessBoard = []
+	var computerflag=false;
+	var turn=0;
+	var id_setTimeout;
+	var Stack=[]  
+    var InGame=true
+blank='https://ws1.sinaimg.cn/large/be53fae0gy1fov2dkp2qjj205f05ft8k.jpg'
+Ximg='https://ws1.sinaimg.cn/large/be53fae0gy1fov2bwx9irj20bt0btwev.jpg'
+Oimg='https://ws1.sinaimg.cn/large/be53fae0gy1fov2bwrqzlj20dw0dwdga.jpg'
+
+    for(var i=0;i<3;i++){
+        for(var j=0;j<3;j++){
+            chess.appendChild(document.createElement('div'))
+            chess.children[i*3+j].appendChild(document.createElement('img')).src=blank
+            chess.children[i*3+j].children[0].onclick=function(e){
+                draw(e.target.parentNode.id[0],e.target.parentNode.id[2])
+            };
+            chess.children[i*3+j].id=i+' '+j
+            if(j==1)
+                chess.children[i*3+j].style.marginLeft=chess.children[i*3+j].style.marginRight="1.01%"
+            if(i==1)
+                chess.children[i*3+j].style.marginTop=chess.children[i*3+j].style.marginBottom="1.1%"
+
+        }
+    }
+    
+    
+	function restart(){
+		for(var i=0;i<3;i++){
+			chessBoard[i]=[]
+			for(var j=0;j<3;j++)
+			chessBoard[i][j]=0;
+		}
+        for(var i=0;i<9;i++){
+            chess.children[i].children[0].src=blank
+        }
+        InGame=true
+        O=false;
+		computerflag=true;
+		turn=0;
+		clearTimeout(id_setTimeout);
+		if(!person_x)
+			computer();
+	}
+	restart();
+
+    function withdraw(){
+		if(turn==0||InGame==false)
+			return ;
+		[i,j]=Stack[turn-1]
+		console.log("withdraw ",i,j)
+		chess.children[i*3+j].children[0].src=blank
+		chessBoard[i][j]=0;
+		turn--;
+		O=!O
+		if(!person_x&&!O&&computerflag)
+			computer();
+		if(!person_o&&O&&computerflag)
+			computer();
+
+	}
+	function draw(i,j){
+        if(InGame==false)return;
+        i=parseInt(i)
+        j=parseInt(j)
+		if(i>=3||j>=3||chessBoard[i][j]!=0)return;
+		Stack[turn]=[i,j]
+		turn++;
+		console.log(i+" "+j)
+		if(O){
+			chessBoard[i][j]=1;
+            chess.children[i*3+j].children[0].src=Oimg;
+        }
+		else{
+			chessBoard[i][j]=-1;
+            chess.children[i*3+j].children[0].src=Ximg;
+        }
+		if(O)s=1
+		else s=-1
+		if(cb[i][0]+cb[i][1]+cb[i][2]==s*3)return win(0)
+        if(cb[0][j]+cb[1][j]+cb[2][j]==s*3)return win(0)
+        if(i==j&&cb[0][0]+cb[1][1]+cb[2][2]==s*3)return win(0)
+        if(i+j==2&&cb[2][0]+cb[1][1]+cb[0][2]==s*3)return win(0)
+		if (turn==9)
+			return win(1)
+
+		O=!O;
+		if((O&&!person_o)||(!O&&!person_x)){
+			if(computerflag)
+				id_setTimeout=setTimeout("computer()",50);
+			document.getElementById("chess").onclick=null;
+		}
+	}
+	
+	function win(c){
+		if(c==0){
+		if(O){
+            alert('圈胜')
+            computerflag=false;
+			return InGame=false
+		}
+		else{
+            alert("叉胜")
+            computerflag=false;
+		return InGame=false
+
+        }
+		}
+		else{
+            alert('平局')
+            computerflag=false;
+		return InGame=false
+
+        }
+		
+	}
+	
+	
+	function change_o(){
+		person_o=!person_o;
+		if(person_o)
+			document.getElementById("w").innerText="O:人类";
+		else
+			document.getElementById("w").innerText="O:电脑";
+		if(!person_o&&O&&computerflag)
+			computer();
+	}
+	function change_x(){
+		person_x=!person_x;
+		if(person_x)
+			document.getElementById("b").innerText="X:人类";
+		else
+			document.getElementById("b").innerText="X:电脑";
+		if(!person_x&&!O&&computerflag)
+			computer();
+	}
+    var cb=chessBoard;
+
+    function dfs(s,dep,log=-1){
+		for(var i=0;i<3;i++){
+			if(cb[i][0]+cb[i][1]+cb[i][2]==s*3)return [1]
+			if(cb[0][i]+cb[1][i]+cb[2][i]==s*3)return [1]
+			if(cb[i][0]+cb[i][1]+cb[i][2]==-s*3)return [0]
+			if(cb[0][i]+cb[1][i]+cb[2][i]==-s*3)return [0]
+		}
+		if(cb[0][0]+cb[1][1]+cb[2][2]==s*3)return [1];
+        if(cb[2][0]+cb[1][1]+cb[0][2]==s*3)return [1];
+		if(cb[0][0]+cb[1][1]+cb[2][2]==-s*3)return [0];
+        if(cb[2][0]+cb[1][1]+cb[0][2]==-s*3)return [0];
+        if(dep==9)return [0.1];//平局
+		//基准情况
+		var sco=0;
+		var W=1;
+		var move_=[]
+		for(var i=0;i<3;i++){
+			for(var j=0;j<3;j++){
+				if(cb[i][j]!=0)continue;
+				cb[i][j]=s;
+				[w,AAA,BBB]=dfs(-s,dep+1)
+				cb[i][j]=0;
+				if(w==0)return [1,i,j]
+				if(w<W){
+					move_=[]
+					W=w;
+				}
+				if(w==W)
+					move_.push([i,j])
+				sco=sco+w;
+				if(log==1){
+					console.log(1-w)
+				}
+			}
+		}
+		i=Math.floor(Math.random()*move_.length)
+		return [1-sco/(9-dep),move_[i][0],move_[i][1]]
+
+    }
+  	function dfs2(s,dep,log=-1){
+        if(dep==9)return [0.5];//平局
+		for(var i=0;i<3;i++){
+			if(cb[i][0]+cb[i][1]+cb[i][2]==s*3)return [1]
+			if(cb[0][i]+cb[1][i]+cb[2][i]==s*3)return [1]
+			if(cb[i][0]+cb[i][1]+cb[i][2]==-s*3)return [0]
+			if(cb[0][i]+cb[1][i]+cb[2][i]==-s*3)return [0]
+		}
+		if(cb[0][0]+cb[1][1]+cb[2][2]==s*3)return [1];
+        if(cb[2][0]+cb[1][1]+cb[0][2]==s*3)return [1];
+		if(cb[0][0]+cb[1][1]+cb[2][2]==-s*3)return [0];
+        if(cb[2][0]+cb[1][1]+cb[0][2]==-s*3)return [0];
+		//基准情况
+		var sco=0;
+		var W=1;
+		var move_=[]
+		for(var i=0;i<3;i++){
+			for(var j=0;j<3;j++){
+				if(cb[i][j]!=0)continue;
+				cb[i][j]=s;
+				[w,AAA,BBB]=dfs2(-s,dep+1)
+				cb[i][j]=0;
+				if(w==0)return [1,i,j]
+				if(w<W){
+					move_=[]
+					W=w;
+				}
+				if(w==W)
+					move_.push([i,j])
+				sco=sco+w;
+				if(log==1){
+					console.log(1-w)
+				}
+			}
+		}
+		i=Math.floor(Math.random()*move_.length)
+		return [1-sco/(9-dep),move_[i][0],move_[i][1]]
+
+    }
+
+    function computer(){
+        var cnt=turn;
+        var w
+        if(O)
+            w=dfs(1,cnt,cnt);
+        else
+            w=dfs(-1,cnt,cnt);
+		console.log(w)
+        return draw(w[1],w[2]);
+    }
+    
+</script>
+
+</body>
+</html>

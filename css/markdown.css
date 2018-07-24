@@ -1,0 +1,175 @@
+.md-h1{
+    border-bottom: 1px solid lightgrey;
+    margin: 10px 0px;
+}
+.md-h1 h1{
+    margin:0px;
+}
+
+.md-h2{
+    border-bottom: 1px solid lightgrey;
+    margin: 10px 5px;
+}
+.md-h2 h2{
+    margin:0px;
+}
+
+
+.md-h3{
+    margin: 0px 10px;
+}
+
+.md-h4{
+    margin: 0px 10px;
+
+}
+
+.md-h5{
+    margin: 0px 10px;
+
+}
+
+.md-passage{
+    margin: 10px 20px;
+}
+
+.md-passage p{
+    display:inline;
+}
+
+.md-passage a{
+    color: cornflowerblue;
+}
+
+.md-code{
+
+}
+
+.md-ul{
+
+}
+
+.md-quote{
+
+}
+
+
+.md-toc a{
+    display: block;
+    color: cornflowerblue;
+}
+.md-toc-a1{
+padding-left: 5px;
+}
+.md-toc-a2{
+padding-left: 15px;
+}
+.md-toc-a3{
+padding-left: 25px;
+}
+.md-toc-a4{
+padding-left: 35px;
+}
+.md-toc-a5{
+padding-left: 45px;
+}
+
+.md-code{
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    margin: 10px 10px 10px 0px;
+    padding: 10px;
+    background: white;
+    border-radius: 20px;
+}
+.md-code-main{
+    width: 90%;
+    position: relative;
+}
+.md-code-main span{
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+.md-code1{
+    left:20px;
+}
+.md-code2{
+    left:30px;
+}
+.md-code3{
+    left:40px;
+}
+.md-code4{
+    left:50px;
+}
+.md-code-index{
+    position: absolute;
+    border-right: 1px solid;
+    padding-right: 5px;
+}
+.md-code-index span{
+}
+.md-code-line{
+    min-height: 15px;
+}
+
+.md-quote{
+border-left: #a1a1a1 3px solid;
+    background: #f4f4f4;
+    padding: 5px 5px 5px 10px;
+}
+
+.md-quote p{
+    margin:0;
+}
+
+.md-hr{
+    border: 0;
+    border-top: 1px solid lightgray;
+    border-bottom: 1px solid lightgray;
+    margin: 0 auto;
+    width: 95%;
+}
+
+.md-inline-code{
+    background: #e4f2ff;
+    border-radius: 10px;
+    padding: 0px 6px 2px 5px;
+    margin: 0px 5px;
+    border: 1px solid #e0e0e0;
+}
+.md-latex-block{
+    text-align:center;
+}
+
+.md-latex-inline{
+    display: inline
+}
+.md-latex-inline pre{
+    display: inline;
+}
+
+.md-img{
+    max-width:90%;
+    max-height:300px;
+}
+
+.md-img-title{
+    width:50%;
+}
+.md-a-inline{
+
+}
+.md-footer p{
+    display:inline;
+}
+.md-footer{
+    padding-left: 20px;
+}
+
+.md-footer a{
+    color:cornflowerblue;
+    margin-left: 20px;
+}
+a.md-error{
+    color:red;!important
+}

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <link rel="dns-prefetch" href="https://tonjar.github.io">
+  <title>Tonjar</title>
+<meta name="viewport" content="width=device-width">
+<script src="//cdn1.lncld.net/static/js/3.6.0/av-min.js"></script>
+<script src="../js/base.js"></script>
+
+
+ <link rel="stylesheet" href="../css/main.css">
+ <link rel="stylesheet" href="../css/markdown.css">
+ <style>
+.markdown-contrainer{
+    width: 100%;
+    background: aliceblue;
+    height: 100%;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}
+.markdown-write{
+    position: absolute;
+    height: 90%;
+    background: antiquewhite;
+    width: 45%;
+    top: 50px;
+    left: 2%;
+    max-width: 43%;
+    overflow-y: hidden;
+    overflow-x: hidden;
+    border-radius: 20px;
+    margin: 0;
+    padding: 0;
+}
+.markdown-w{
+position: relative;
+    width: 93%;
+    height: 91%;
+    top: 20px;
+    left: 1%;
+    border-radius: 20px;
+    resize: none;
+    padding: 2%;
+    margin: 0;
+    background: antiquewhite;
+    border: 1px dashed darkgoldenrod;
+    outline: none;
+    font-size: medium;
+}
+
+
+ .markdown-show{
+position: absolute;
+    max-width: 43%;
+    height: 90%;
+    left: 51%;
+    top: 50px;
+    overflow-y: overlay;
+    overflow-x: hidden;
+    padding: 10px 20px;
+    width: 45%; 
+    border-radius: 20px;
+    margin-bottom:0;
+ }
+.markdown-span{
+    background: #efefef;
+    height: 35px;
+    width: 400px;
+    top: -100px;
+    position: relative;
+    margin: 0 auto;
+    border-radius: 30px;
+    text-align: center;
+    padding: 100px 0px 0px 0px;
+}
+.markdown-home{
+    background: #efefef;
+    height: 35px;
+    width: 200px;
+    left: -120px;
+    top: -230px;
+    position: relative;
+    border-radius: 30px;
+    text-align: center;
+    padding: 100px 0px 0px 0px;
+}
+    
+.markdown-home a{
+float: right;
+    right: 16px;
+    position: relative;
+}
+.markdown-span button{
+    margin: 0px 10px;
+    border: 0;
+    background: #909090;
+    border-radius: 10px;
+    color: white;
+    outline:none;
+}
+
+ </style>
+</head>
+<body>
+
+    <div class="markdown-contrainer" id="contrainer">
+    <div class="markdown-write card">
+    <textarea id="write" class="markdown-w"></textarea>
+    </div>
+    <div class="markdown-show card"id="show">
+       </div>
+    </div>
+    <div id="span" class="markdown-span">
+
+    <button>样例</button>
+    <button>预览</button>
+    <button>手动预览</button>
+    </div>
+        <div class="markdown-home"><a href="../index.html">回到主页</a></div>
+
+    <script>
+        var span=document.getElementById("span")
+        var write=document.getElementById("write")
+        var show=document.getElementById("show")
+        function update(){
+            show.innerHTML=""
+            show.scrollTo(0,markdown(show,write.value,write.selectionEnd)[1]-200)
+        }
+        span.children[0].onclick=function(){
+            write.value="# markdown 使用指南\n\n本指南仅对本博客的markdown解析器负责。如果发现bug，可以在[首页](https://tonjar.github.io/)的评论区下评论汇报bug。\n\n我没有试图把完整的markdown语法加入此解析器。仅仅根据我的使用习惯实现了一部分功能。如果有人愿意总结指出我没有完成的部分，我也愿意继续完善此解析器。\n\n[TOC]\n\n## 标题 \n\n\n# 大标题 \n大标题\n====\n## 小标题\n小标题\n---\n### 更小的标题\n#### 更加小的标题\n##### 所支持的最小标题\n\n\n支持`# 标题 #`后一个井号是可选的记号，注意`# `需要放在行首并且包含一个空格。\n\n## 目录\n\n使用`[TOC]`来生成目录\n\n## 粗斜体\n\n*斜体文本*    _斜体文本_\n**粗体文本**    __粗体文本__\n***粗斜体文本***    ___粗斜体文本___\n\n## 链接\n### 常用链接方法\n\n文字链接 [链接名称](http://链接网址)\n网址链接 <http://链接网址>  (`<``>`是可以省略的如 http://aaa )\n\n### 高级链接技巧\n\n这个链接用 1 作为网址变量 [Google][1].\n这个链接用 yahoo 作为网址变量 [Yahoo!][yahoo].\n\n[1]: http://www.google.com/   \n  \n[yahoo]: http://www.yahoo.com/\n\n## 列表\n\n### 普通无序列表\n\n- 列表文本前使用 [减号+空格]\n+ 列表文本前使用 [加号+空格]\n* 列表文本前使用 [星号+空格]\n### 普通有序列表\n\n1. 列表前使用 [数字+空格]\n2. 我们会自动帮你添加数字\n7. 不用担心数字不对，显示的时候我们会自动把这行的 7 纠正为 3\n列表嵌套\n\n1. 列出所有元素：\n    - 无序列表元素 A\n        1. 元素 A 的有序子列表\n    - 前面加四个空格\n2. 列表里的多段换行：\n    前面必须加四个空格，\n    这样换行，整体的格式不会乱\n3. 列表里引用：\n\n    > 前面空一行\n    > 仍然需要在 >  前面加四个空格\n\n### 任务列表\n\n- [x] 已完成\n- [ ]  未完成\n## 图片\n\n![图片名称](../img/Tonjar.png)\n\n## 引用\n### 普通引用\n\n> 引用文本前使用 [大于号+空格]\n> 折行可以不加，新起一行都要加上哦\n### 引用里嵌套引用\n\n> 最外层引用\n> > 多一个 > 嵌套一层引用\n> > > 可以嵌套很多层\n### 引用里嵌套列表\n\n> - 这是引用里嵌套的一个列表\n> - 还可以有子列表\n>     * 子列表需要从 - 之后延后四个空格开始\n### 引用里嵌套代码块\n\n> ```\n> 使用 ``` 形成代码块\n> ```\n\n##分隔符\n\n前面的段落\n\n---\n\n后面的段落\n\n## 公式\n\n\n行内公式 $ x = \\frac{\\sqrt{x^2}}{2} $\n单行公式 $$ \\frac{\\sqrt{x^2}}{2} $$\n\n## 代码\n\n支持高亮\n\n```c++\n#include<iostream>\nusing namespace std;\nint main(){\n	return 0;\n}\n```\n\n## 表格\n\n|第一列|第二列|第三列|\n|---|---|---|\n|1|2|3|\n\n## 注脚\n\n1[^1] 注脚会自动移动到文档底部\n\n[^1]:22\n\n2[^2]\n\n[^2]:22\n\n## 结束\n"
+
+        update()
+        }
+        span.children[1].onclick=update
+        span.children[2].onclick=function(e){
+            if(write.oninput==null){
+                write.oninput=update
+                e.target.innerHTML="即时预览"
+            }
+            else{
+                write.oninput=null
+                e.target.innerHTML="手动预览"
+            }
+        }
+        span.children[2].click()
+    </script>
+</body>
+</html>
+

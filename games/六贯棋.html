@@ -1,0 +1,576 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>六贯棋</title>
+</head>
+
+<body>
+<canvas id="chess" width="600px" height="600px" style="display:fill; position:fixed; margin:50px auto;"></canvas>
+<canvas id="zi" width="600px" height="600px" style="display:fill; position:fixed; margin:50px auto;"></canvas>
+<canvas id="win" width="600px" height="600px" onclick="setwintext()" style="display:none; position:fixed;left:60px;top:55px;"></canvas>
+<br>
+<input type="button" id="w" onclick="change_red()" value="红方：人类">
+<input type="button" id="b" onclick="change_blue()" value="蓝方：人类">
+<input type="button" id="help" style="margin-left:70px" onclick="help()" value="游戏规则">
+<input type="button" id="size" style="margin-left:20px" onclick="change_size()" value="大小:6 x 6">
+<button style="margin-left:20px;" onclick="restart()">重新开始</button>
+<br>
+<script type="text/javascript">
+	var size = 6;
+	var chess = document.getElementById("chess");
+	var context_luozi = document.getElementById("zi").getContext("2d");
+	var context = chess.getContext("2d");
+	var wintext=document.getElementById("win");
+	var wincontext=wintext.getContext("2d");
+	
+	var red =true;
+	var person_red =true,person_blue =true;
+	var chessBoard = []
+	var score_red=[],score_blue=[];
+	function set_chess_board(){
+		for(var i=0;i<size;i++){
+			chessBoard[i]=[];
+			score_red[i]=[];
+			score_blue[i]=[];
+			for(var j=0;j<size;j++){
+				chessBoard[i][j]=0;
+			}
+		}
+	}
+	var computerflag=true;
+	
+	var inter=(chess.width-20)/(size*3-1);
+	function drawchess(){
+		chess.height=(3*size+1)*(chess.width-20)/(3.4*size+1.7)+40;
+		for(var j=0;j<size;j++){
+			context.strokeStyle="#97CBFF";
+			context.beginPath();
+			context.moveTo(10+2*j*inter,20+(0.57)*inter);
+			context.lineTo(10+(2*j+1)*inter,20);
+			context.lineTo(10+(2*j+2)*inter,20+(0.57)*inter);
+			context.moveTo(10+(2*j+size-1)*inter,20+(1.57+(size-1)*1.57)*inter);
+			context.lineTo(10+(2*j+size)*inter,20+(2.15+(size-1)*1.57)*inter);
+			context.lineTo(10+(2*j+size+1)*inter,20+(1.57+(size-1)*1.57)*inter);			
+			context.stroke();
+			context.strokeStyle="#BFBFBF";
+			context.beginPath();
+			context.moveTo(10+(2*j+2)*inter,20+(0.57)*inter);	
+			context.lineTo(10+(2*j+2)*inter,20+(1.57)*inter);
+			context.lineTo(10+(2*j+1)*inter,20+(2.15)*inter);
+			context.lineTo(10+(2*j)*inter,20+(1.57)*inter);
+			context.moveTo(10+(2*j+size+1)*inter,20+(0.57+(size-1)*1.57)*inter);	
+			context.lineTo(10+(2*j+size+1)*inter,20+(1.57+(size-1)*1.57)*inter);
+			context.stroke();
+		}
+		context.strokeStyle="#ff7575";
+		context.beginPath();
+		context.moveTo(10,20+(0.57)*inter);	
+		context.lineTo(10,20+(1.57)*inter);
+		context.lineTo(10+inter,20+(2.15)*inter);
+		context.moveTo(10+(2*size)*inter,20+(0.57)*inter);
+		context.lineTo(10+(2*size)*inter,20+(1.57)*inter);
+		context.moveTo(10+(size-1)*inter,20+(0.57+(size-1)*1.57)*inter);	
+		context.lineTo(10+(size-1)*inter,20+(1.57+(size-1)*1.57)*inter);
+		context.moveTo(10+(3*size-2)*inter,20+((size-1)*1.57)*inter);
+		context.lineTo(10+(3*size-1)*inter,20+(0.57+(size-1)*1.57)*inter);
+		context.lineTo(10+(3*size-1)*inter,20+(1.57+(size-1)*1.57)*inter);
+		context.stroke();
+		for(var i=1;i<size-1;i++){
+			for(var j=0;j<size;j++){
+				context.strokeStyle="#BFBFBF";
+				context.beginPath();
+				context.moveTo(10+(2*j+2+i)*inter,20+(0.57+i*1.57)*inter);	
+				context.lineTo(10+(2*j+2+i)*inter,20+(1.57+i*1.57)*inter);
+				context.lineTo(10+(2*j+1+i)*inter,20+(2.15+i*1.57)*inter);
+				context.lineTo(10+(2*j+i)*inter,20+(1.57+i*1.57)*inter);
+				context.stroke();
+			}
+			context.strokeStyle="#ff7575";
+			context.beginPath();
+			context.moveTo(10+inter*i,20+(0.57+i*1.57)*inter);	
+			context.lineTo(10+inter*i,20+(1.57+i*1.57)*inter);
+			context.lineTo(10+inter*(1+i),20+(2.15+i*1.57)*inter);
+			context.moveTo(10+(2*size+i-1)*inter,20+(i*1.57)*inter);
+			context.lineTo(10+(2*size+i)*inter,20+(0.57+i*1.57)*inter);
+			context.lineTo(10+(2*size+i)*inter,20+(1.57+i*1.57)*inter);
+			context.stroke();
+		}
+		return;
+		for(var i=0;i<size/2-0.6;i++){
+			for(var j=0;j<size;j++){
+				context.strokeStyle="#BFBFBF";
+				context.beginPath();
+				context.moveTo(10+2*j*inter,20+(0.57+i*3.15)*inter);
+				context.lineTo(10+(2*j+1)*inter,20+(0+i*3.15)*inter);
+				context.lineTo(10+(2*j+2)*inter,20+(0.57+i*3.15)*inter);
+				context.lineTo(10+(2*j+2)*inter,20+(1.57+i*3.15)*inter);
+				context.lineTo(10+(2*j+1)*inter,20+(2.15+i*3.15)*inter);
+				context.lineTo(10+(2*j+2)*inter,20+(1.57+i*3.15)*inter);
+				context.lineTo(10+(2*j+3)*inter,20+(2.15+i*3.15)*inter);
+				context.lineTo(10+(2*j+3)*inter,20+(3.15+i*3.15)*inter);
+				context.lineTo(10+(2*j+2)*inter,20+(3.72+i*3.15)*inter);
+				context.lineTo(10+(2*j+1)*inter,20+(3.15+i*3.15)*inter);
+				context.stroke();
+				if(i==0){
+					context.strokeStyle="#97CBFF";
+					context.beginPath();
+					context.moveTo(10+2*j*inter,20+(0.57+i*3.15)*inter);
+					context.lineTo(10+(2*j+1)*inter,20+(0+i*3.15)*inter);
+					context.lineTo(10+(2*j+2)*inter,20+(0.57+i*3.15)*inter);
+					context.stroke();
+				}
+			}
+			context.strokeStyle="#ff7575";
+			context.beginPath();
+			if(i==0)
+				context.moveTo(10,20+(0.57+i*3.15)*inter);
+			else{
+				context.moveTo(10+inter,20+(0+i*3.15)*inter);
+				context.lineTo(10,20+(0.57+i*3.15)*inter);
+			}
+			context.lineTo(10,20+(1.57+i*3.15)*inter);
+			context.lineTo(10+inter,20+(2.15+i*3.15)*inter);
+			context.lineTo(10+inter,20+(3.15+i*3.15)*inter);
+			if(i==0)
+				context.moveTo(10+2*size*inter,20+(0.57+i*3.15)*inter);
+			else{
+				context.moveTo(10+2*size*inter+inter,20+(0+i*3.15)*inter);
+				context.lineTo(10+2*size*inter,20+(0.57+i*3.15)*inter);
+			}
+			context.lineTo(10+2*size*inter,20+(1.57+i*3.15)*inter);
+			context.lineTo(10+2*size*inter+inter,20+(2.15+i*3.15)*inter);
+			context.lineTo(10+2*size*inter+inter,20+(3.15+i*3.15)*inter);
+			context.stroke();
+		}
+		if(size%2==1){
+			for(var j=0;j<size;j++){
+				if(j==0)
+				context.strokeStyle="#ff7575";
+				else
+				context.strokeStyle="#BFBFBF";
+				context.beginPath();
+				context.moveTo(10+(2*j+1)*inter,20+(0+(size-1)/2*3.15)*inter);
+				context.lineTo(10+(2*j+0)*inter,20+(0.57+(size-1)/2*3.15)*inter);
+				context.lineTo(10+(2*j+0)*inter,20+(1.57+(size-1)/2*3.15)*inter);
+				context.stroke();
+				context.strokeStyle="#97CBFF";
+				context.beginPath();
+				context.moveTo(10+(2*j+0)*inter,20+(1.57+(size-1)/2*3.15)*inter);
+				context.lineTo(10+(2*j+1)*inter,20+(2.15+(size-1)/2*3.15)*inter);
+				context.lineTo(10+(2*j+2)*inter,20+(1.57+(size-1)/2*3.15)*inter);
+				context.stroke();
+			}
+			context.strokeStyle="#ff7575";
+			context.beginPath();
+			context.moveTo(10+(2*size)*inter,20+(1.57+(size-1)/2*3.15)*inter);
+			context.lineTo(10+(2*size)*inter,20+(0.57+(size-1)/2*3.15)*inter);
+			context.lineTo(10+(2*size+1)*inter,20+(0+(size-1)/2*3.15)*inter);
+			context.stroke();
+		}
+		else{
+			for(var j=0;j<size;j++){
+				context.strokeStyle="#97CBFF";
+				context.beginPath();
+				context.moveTo(10+(2*j+1)*inter,20+(0+(size/2)*3.15)*inter);
+				context.lineTo(10+(2*j+2)*inter,20+(0.57+(size/2)*3.15)*inter);
+				context.lineTo(10+(2*j+3)*inter,20+(0+(size/2)*3.15)*inter);
+				context.stroke();
+			}
+		}
+
+	}
+	function draw(i,j){
+		if(chessBoard[i][j]!=0)
+			return;
+		context_luozi.beginPath();
+		if(red){
+			context_luozi.fillStyle="#ff7575";
+			chessBoard[i][j]=1;
+		}else{
+			context_luozi.fillStyle="#97CBFF";
+			chessBoard[i][j]=2;
+		}
+		context_luozi.moveTo((2*i+j)*inter+11,(1.57*j+0.57)*inter+20);
+		context_luozi.lineTo((2*i+j+1)*inter+10,1.57*j*inter+21);
+		context_luozi.lineTo((2*i+j+2)*inter+9,(1.57*j+0.57)*inter+20);
+		context_luozi.lineTo((2*i+j+2)*inter+9,(1.57*j+1.57)*inter+20);
+		context_luozi.lineTo((2*i+j+1)*inter+10,(1.57*j+2.15)*inter+19);
+		context_luozi.lineTo((2*i+j)*inter+11,(1.57*j+1.57)*inter+20);
+		
+		context_luozi.fill();
+		var flag=[];
+		for(var m=0;m<size;m++){
+			flag[m]=[]
+			for(var n=0;n<size;n++)
+				flag[m][n]=0;
+		}
+		var queue=[],s=0,p=0;
+		queue[p]=[];
+		queue[p][0]=i;
+		queue[p][1]=j;
+		flag[i][j]=1;
+		p++;
+		var win_flag=0;
+		var value=0;
+		if(red)value=1;
+		else value=2;
+		//console.log("______");
+		while(s<p){
+			var m=queue[s][0],n=queue[s][1];
+			//console.log(m+" "+n);
+			s++;
+			if(n>0){
+				if(flag[m][n-1]==0&&chessBoard[m][n-1]==value){
+					queue[p]=[];
+					queue[p][0]=m;
+					queue[p][1]=n-1;
+					p++;
+					flag[m][n-1]=1;
+				}
+				if(m<size-1&&flag[m+1][n-1]==0&&chessBoard[m+1][n-1]==value){
+					queue[p]=[];
+					queue[p][0]=m+1;
+					queue[p][1]=n-1;
+					p++;
+					flag[m+1][n-1]=1;
+				}
+			}
+			if(m>0&&flag[m-1][n]==0&&chessBoard[m-1][n]==value){
+				queue[p]=[];
+				queue[p][0]=m-1;
+				queue[p][1]=n;
+				p++;
+				flag[m-1][n]=1;
+			}
+			if(m<size-1&&flag[m+1][n]==0&&chessBoard[m+1][n]==value){
+				queue[p]=[];
+				queue[p][0]=m+1;
+				queue[p][1]=n;
+				p++;
+				flag[m+1][n]=1;
+			}
+			if(n<size-1){
+				if(flag[m][n+1]==0&&chessBoard[m][n+1]==value){
+					queue[p]=[];
+					queue[p][0]=m;
+					queue[p][1]=n+1;
+					p++;
+					flag[m][n+1]=1;
+				}
+				if(m>0&&flag[m-1][n+1]==0&&chessBoard[m-1][n+1]==value){
+					queue[p]=[];
+					queue[p][0]=m-1;
+					queue[p][1]=n+1;
+					p++;
+					flag[m-1][n+1]=1;
+				}
+			}
+			if(!red){
+				if(n==0){
+					if(win_flag==2)return win();
+					win_flag=1;
+				}
+				if(n==size-1){
+					if(win_flag==1)return win();
+					win_flag=2;
+				}			
+			}
+			else{
+				if(m==0){
+					if(win_flag==2)return win();
+					win_flag=1;
+				}
+				if(m==size-1){
+					if(win_flag==1)return win();
+					win_flag=2;
+				}
+			}
+		}
+		red=!red;
+		if((red&&!person_red)||(!red&&!person_blue)){
+			if(computerflag)
+				id_setTimeout=setTimeout("computer()",50);
+			document.getElementById("zi").onclick=null;
+		}
+		else{
+			set_zi();
+		}
+	}
+	function set_zi(){
+		document.getElementById("zi").onclick=function(e){
+			for(var i=0;i<size;i++){
+				for(var j=0;j<size;j++){
+					var x = 2*i+j+1;
+					var y = 1.57*j+1.07;
+					if((e.offsetX-x*inter-10)*(e.offsetX-x*inter-10)+(e.offsetY-y*inter-20)*(e.offsetY-y*inter-20)<inter*inter)
+						return draw(i,j);
+				}
+			}
+		}
+	}
+	
+	var id_setTimeout;
+	function restart(){
+		inter=(chess.width-20)/(size*3-1);
+		set_chess_board();
+		set_zi();
+		drawchess();
+		context_luozi.clearRect(0,0,600,600);
+		setwintext();
+		red=true;
+		computerflag=true;
+		clearTimeout(id_setTimeout);
+		if(!person_red)
+			computer();
+	}
+	restart();
+	
+	
+	function win(){
+		if(red){
+			wincontext.font="100px 华文新魏";
+			wincontext.fillStyle="#ff7575";
+			wincontext.fillText("红方胜",135,220);
+			wincontext.strokeStyle="white";
+			wincontext.strokeText("红方胜",135,220);
+			wintext.style.display="inline";
+			console.log("red win");
+			computerflag=false;
+			return document.getElementById("zi").onclick=null;
+		}
+		else{
+			wincontext.font="100px 华文新魏";
+			wincontext.fillStyle="#97CBFF";
+			wincontext.fillText("蓝方胜",135,220);
+			wincontext.strokeStyle="white";
+			wincontext.strokeText("蓝方胜",135,220);
+			wintext.style.display="inline";
+			console.log("blue win");
+			computerflag=false;
+			return document.getElementById("zi").onclick=null;
+		}
+	
+	}
+	function setwintext(){
+		wintext.style.display="none";
+		wincontext.clearRect(0,0,600,600);
+		help_visible=false;
+	}
+
+	
+	function change_red(){
+		person_red=!person_red;
+		if(person_red)
+			document.getElementById("w").value="红方：人类";
+		else
+			document.getElementById("w").value="红方：电脑";
+		if(!person_red&&red&&computerflag)
+			computer();
+	}
+	function change_blue(){
+		person_blue=!person_blue;
+		if(person_blue)
+			document.getElementById("b").value="蓝方：人类";
+		else
+			document.getElementById("b").value="蓝方：电脑";
+		if(!person_blue&&!red&&computerflag)
+			computer();
+	}
+	var selected=1;
+	function change_size(){
+	var choose = [];
+	choose[0]=4;
+	choose[1]=6;
+	choose[2]=7;
+	choose[3]=9;
+	choose[4]=12;
+	choose[5]=14;
+	choose[6]=16;
+	selected++;
+	selected%=7;
+	size=choose[selected];
+	restart();
+	document.getElementById("size").value="大小:"+size+" x "+size;
+	}
+	var help_visible=false;
+	function help(){
+		if(help_visible)return setwintext();
+		help_visible=true;
+		wincontext.font="30px 华文新魏";
+		wincontext.fillStyle="black";
+		wincontext.fillText("游戏规则",230,50);
+		wincontext.fillText("游戏双方先把己方的两边相连则胜",70,120);
+		wincontext.fillText("本游戏不存在平局，红方为先手",75,160);	
+		wintext.style.display="inline";
+	}
+	function setscore(i,j){
+		score[i][j]=0;
+		
+	}
+	function computer(){
+		var stack=[],p=0,stack_socre=0;
+		for(var i=0;i<size;i++){
+			var str="";
+			for(var j=0;j<size;j++){
+				var score=1;
+				if(chessBoard[i][j]!=0)score=0;
+				else if(red){
+					var tmp=[];
+					for(var m=i;m<=size-1;m++){
+						if(m+j-size+1<0||m+j-size+1>=size)
+						continue;
+						if(chessBoard[size-1][m+j-size+1]==0)tmp[m+j-size+1]=1;
+						else if(chessBoard[size-1][m+j-size+1]==1)tmp[m+j-size+1]=2;
+						else if(chessBoard[size-1][m+j-size+1]==2)tmp[m+j-size+1]=0;
+					}
+					for(var m=size-2;m>=i;m--){
+						for(var n=j;n>=0&&n>=i+j-m;n--){
+							if(n==0)break;
+							tmp[n]+=tmp[n-1];
+							if(chessBoard[m][n]==1)tmp[n]*=1.3;
+							if(chessBoard[m][n]==2)tmp[n]=0;
+						}
+					}
+					score*=tmp[j];
+					for(var m=0;m<=i;m++){
+						if(m+j<0||m+j>=size)
+						continue;
+						if(chessBoard[0][m+j]==0)tmp[m+j]=1;
+						else if(chessBoard[0][m+j]==1)tmp[m+j]=2;
+						else if(chessBoard[0][m+j]==2)tmp[m+j]=-1;
+					}
+					for(var m=1;m<=i;m++){
+						for(var n=j;n<size&&n<=i+j-m;n++){
+							if(n==size-1)break;
+							tmp[n]+=tmp[n+1];
+							if(chessBoard[m][n]==1)tmp[n]*=1.3;
+							if(chessBoard[m][n]==2)tmp[n]=0;
+						}
+					}
+					score*=tmp[j];
+					if((j>0&&chessBoard[i][j-1]==1)||(j>0&&i<size-1&&chessBoard[i+1][j-1]==1)||
+					(i>0&&chessBoard[i-1][j]==1)||(i<size-1&&chessBoard[i+1][j]==1)||
+					(j<size-1&&chessBoard[i][j+1]==1)||(j<size-1&&i>0&&chessBoard[i-1][j+1]==1))
+						score*=0.9;
+					/*else if((i>1&&j<size-1&&chessBoard[i-2][j+1]==1)||(i<size-2&&j>0&&chessBoard[i+2][j-1]==1)||
+					(j>1&&i<size-1&&chessBoard[i+1][j-2]==1)||(j<size-2&&i>0&&chessBoard[i-1][j+2]==1))
+						score*=1.1;*/
+				}
+				else{
+					var tmp=[];
+					for(var m=j;m<=size-1;m++){
+						if(m+i-size+1<0||m+i-size+1>=size)
+						continue;
+						if(chessBoard[m+i-size+1][size-1]==0)tmp[m+i-size+1]=1;
+						else if(chessBoard[m+i-size+1][size-1]==1)tmp[m+i-size+1]=0;
+						else if(chessBoard[m+i-size+1][size-1]==2)tmp[m+i-size+1]=2;
+					}
+					for(var m=size-2;m>=j;m--){
+						for(var n=i;n>=0&&n>=j+i-m;n--){
+							if(n==0)break;
+							tmp[n]+=tmp[n-1];
+							if(chessBoard[n][m]==1)tmp[n]=0;
+							if(chessBoard[n][m]==2)tmp[n]*=1.3;
+						}
+					}
+					score*=tmp[i];
+					for(var m=0;m<=j;m++){
+						if(m+i<0||m+i>=size)
+						continue;
+						if(chessBoard[m+i][0]==0)tmp[m+i]=1;
+						else if(chessBoard[m+i][0]==1)tmp[m+i]=0;
+						else if(chessBoard[m+i][0]==2)tmp[m+i]=2;
+					}
+					for(var m=1;m<=j;m++){
+						for(var n=i;n<size&&n<=j+i-m;n++){
+							if(n==size-1)break;
+							tmp[n]+=tmp[n+1];
+							if(chessBoard[n][m]==2)tmp[n]*=1.3;
+							if(chessBoard[n][m]==1)tmp[n]=0;
+						}
+					}
+					score*=tmp[i];
+					if((j>0&&chessBoard[i][j-1]==2)||(j>0&&i<size-1&&chessBoard[i+1][j-1]==2)||
+					(i>0&&chessBoard[i-1][j]==2)||(i<size-1&&chessBoard[i+1][j]==2)||
+					(j<size-1&&chessBoard[i][j+1]==2)||(j<size-1&&i>0&&chessBoard[i-1][j+1]==2))
+						score*=0.9;
+				}
+				if(score>stack_socre){
+					stack[0]=[];
+					stack[0][0]=i;
+					stack[0][1]=j;
+					p=1;
+					stack_socre=score;
+				}
+				else if(score==stack_socre){
+					stack[p]=[];
+					stack[p][0]=i;
+					stack[p][1]=j;
+					p++;				
+				}
+				str+=score+" ";
+			}
+			console.log(str);
+		}
+		console.log(stack_socre);
+		if(stack_socre!=0){
+			var k=Math.floor(Math.random()*p);
+			return draw(stack[k][0],stack[k][1]);
+		}
+		for(var m=0;m<100;m++){
+			var k=Math.floor(Math.random()*size);
+			var l=Math.floor(Math.random()*size);
+			if(chessBoard[k][l]==0)
+				return draw(k,l);
+		}
+		for(var i=0;i<size;i++)
+			for(var j=0;j<size;j++)
+				if(chessBoard[i][j]==0)
+					return draw(i,j);
+		/*
+		var stack=[],p=0,stack_socre=0;
+		for(var i=0;i<size;i++){
+			var str="";
+			for(var j=0;j<size;j++){
+				if(score[i][j]>stack_socre){
+					stack[0]=[];
+					stack[0][0]=i;
+					stack[0][1]=j;
+					p=1;
+					stack_socre=score[i][j];
+				}
+				else if(score[i][j]==stack_socre){
+					stack[p]=[];
+					stack[p][0]=i;
+					stack[p][1]=j;
+					p++;				
+				}
+				str+=score[j][i]+" ";
+			}
+			console.log(str);
+		}
+		
+		console.log(stack_socre);
+		if(stack_socre!=0){
+			var k=Math.floor(Math.random()*p);
+			return draw(stack[k][0],stack[k][1]);
+			
+		}
+		for(var m=0;m<100;m++){
+			var k=Math.floor(Math.random()*size);
+			var l=Math.floor(Math.random()*size);
+			if(chessBoard[k][l]==0)
+				return draw(k,l);
+		}
+		for(var i=0;i<size;i++)
+			for(var j=0;j<size;j++)
+				if(chessBoard[i][j]==0)
+					return draw(i,j);*/
+	
+	}
+	
+</script>
+
+</body>
+</html>

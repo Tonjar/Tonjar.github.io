@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <link rel="dns-prefetch" href="https://tonjar.github.io">
+  <title>Tonjar</title>
+<meta name="viewport" content="width=device-width">
+<script src="//cdn1.lncld.net/static/js/3.6.0/av-min.js"></script>
+<script src="js/base.js"></script>
+
+ <link rel="stylesheet" href="css/main.css">
+ <link rel="stylesheet" href="css/markdown.css">
+</head>
+<body>
+
+    <div class="mainpage"id="mainpage"></div>
+    <div class="sidebar"id="sidebar"></div>
+    <script src="js/sidebar.js"></script>
+
+    <script>
+        build_info_list()
+
+     
+        if(info_list.length==0){
+            mainpage.appendChild(document.createElement("p")).innerHTML="数据读取失败，可能原因是网络波动，请等待几秒后刷新网站重试"
+        }
+        else{
+            mainpage.appendChild(document.createElement("div"))
+            var list;
+            var listl;
+            year=0
+            for(var i=info_list.length-1;i>=0;i--){
+                if(year!=info_list[i].time.getFullYear()){
+                    list=mainpage.appendChild(document.createElement("div"))
+                    list.setAttribute("class","card col-LIST")
+                    year=info_list[i].time.getFullYear()
+                    listl=list.appendChild(document.createElement("div"))
+                    listl.appendChild(document.createElement("p")).innerText=year
+                    listl.setAttribute("class","col-year")
+                    listl=list.appendChild(document.createElement("div"))
+                    listl.setAttribute("class","col-list")
+
+                }
+                var a=listl.appendChild(document.createElement("div"))
+                var title=a.appendChild(document.createElement("a"))
+                title.innerText=info_list[i].title
+                title.setAttribute("class","col-title")
+                title.href="article.html?id="+info_list[i].id;
+                var time=a.appendChild(document.createElement("p"))
+                time.innerText=info_list[i].time.toISOString().substr(0,10)
+                time.setAttribute("class","col-time")
+                var de=a.appendChild(document.createElement("div"))
+                markdown(de,info_list[i].description)
+                de.setAttribute("class","col-de")
+                a.appendChild(document.createElement("hr")).setAttribute("class","col-hr")
+                
+
+            }
+        }
+    </script>
+</body>
+</html>
+
