@@ -13,13 +13,17 @@ function level(x){
     return 0;
 }
 
+var time_seal(){
+    return ((new Date()).getDate()+(new Date()).getMonth()*31)*5+Math.floor(a.getHours()/4);
+}
+
 var get_articles_info=function(){
     var query_articles = new AV.Query('articles');
     query_articles.limit(1000)
     query_articles.notEqualTo("title","公告")
     query_articles.select(["title","tags","categories","description"])
     query_articles.find().then(function(articles){
-        localStorage.articleInfoTime=((new Date()).getDate()+(new Date()).getMonth()*31)
+        localStorage.articleInfoTime=time_seal();
         localStorage.articleinfo=""
         for(var i=0;i<articles.length;i++){
             if(i!=0)
@@ -40,14 +44,14 @@ function build_info_list(){
             info_list[info_list.length]={
                 "id":localStorage.articleinfo.substr(i+2,24),
                 "title":localStorage.articleinfo.substring(i+localStorage.articleinfo.substr(i).search(/bt\[/)+3,i+localStorage.articleinfo.substr(i).search(/\]et/)),
-                "tags":localStorage.articleinfo.substring(i+localStorage.articleinfo.substr(i).search(/bT\[/)+3,i+localStorage.articleinfo.substr(i).search(/\]eT/)),
-                "categories":localStorage.articleinfo.substring(i+localStorage.articleinfo.substr(i).search(/eT,bc\[/)+6,i+localStorage.articleinfo.substr(i).search(/\]ec,bd/)),
+                "tags":localStorage.articleinfo.substring(i+localStorage.articleinfo.substr(i).search(/bT\[/)+3,i+localStorage.articleinfo.substr(i).search(/\]eT/)).replace(/^[\s,]+/,"").replace(/[\s,]+$/,"").split(/[\s\,]+/),
+                "categories":localStorage.articleinfo.substring(i+localStorage.articleinfo.substr(i).search(/eT,bc\[/)+6,i+localStorage.articleinfo.substr(i).search(/\]ec,bd/)).replace(/^[\s,]+/,"").replace(/[\s,]+$/,"").split(/[\s\,]+/),
                 "description":localStorage.articleinfo.substring(i+localStorage.articleinfo.substr(i).search(/ec,bd\[/)+6,i+localStorage.articleinfo.substr(i).search(/\]}}/)),
                 "time":new Date(localStorage.articleinfo.substr(i+27,10))
             }
         }
     }
-    if(((new Date()).getDate()+(new Date()).getMonth()*31)!=localStorage.articleInfoTime){
+    if(time_seal()!=localStorage.articleInfoTime){
         get_articles_info();
 }
 var get_articleById=function(id){
@@ -69,6 +73,12 @@ var get_articleById=function(id){
             atr_t=atr.appendChild(document.createElement("p"))
             atr_t.innerText=article.updatedAt.toISOString().substring(0,article.updatedAt.toISOString().search(/T/))
             atr_t.setAttribute("class","article-time")
+            if(level()==2){
+            atr_t=atr.appendChild(document.createElement("a"))
+            atr_t.innerText="EDIT"
+            atr_t.href="edit.html?id="+id;
+            atr_t.setAttribute("class","article-time")
+            }
             atr.appendChild(document.createElement("hr")).setAttribute("class","article-title-line")
             atr_t=atr.appendChild(document.createElement("div"))
             atr_t.setAttribute("class","article-main")

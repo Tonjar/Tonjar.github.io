@@ -29,16 +29,23 @@
         }
         else{
             mainpage.appendChild(document.createElement("div"))
+            make_list(info_list)
+        }
+        function make_list(x){
+            while(mainpage.mainpage.childElementCount>1)
+                mainpage.remove(mainpage.lastElementChild);
             var list;
             var listl;
-            year=0
-            for(var i=info_list.length-1;i>=0;i--){
-                if(year!=info_list[i].time.getFullYear()){
+            year=0;
+            month=0;
+            for(var i=x.length-1;i>=0;i--){
+                if(year!=x[i].time.getFullYear()||month!=x[i].time.getMonth()){
                     list=mainpage.appendChild(document.createElement("div"))
                     list.setAttribute("class","card col-LIST")
-                    year=info_list[i].time.getFullYear()
+                    year=x[i].time.getFullYear()
+                    month=x[i].time.getMonth()
                     listl=list.appendChild(document.createElement("div"))
-                    listl.appendChild(document.createElement("p")).innerText=year
+                    listl.appendChild(document.createElement("p")).innerText=year+" "+(month+1)+"月"
                     listl.setAttribute("class","col-year")
                     listl=list.appendChild(document.createElement("div"))
                     listl.setAttribute("class","col-list")
@@ -46,18 +53,31 @@
                 }
                 var a=listl.appendChild(document.createElement("div"))
                 var title=a.appendChild(document.createElement("a"))
-                title.innerText=info_list[i].title
+                title.innerText=x[i].title
                 title.setAttribute("class","col-title")
-                title.href="article.html?id="+info_list[i].id;
+                title.href="article.html?id="+x[i].id;
+                if(level()==2){
+                var title=a.appendChild(document.createElement("a"))
+                title.innerText="EDIT"
+                title.setAttribute("class","col-EDIT")
+                title.href="edit.html?id="+x[i].id;                
+                }
                 var time=a.appendChild(document.createElement("p"))
-                time.innerText=info_list[i].time.toISOString().substr(0,10)
+                time.innerText=x[i].time.toISOString().substr(0,10)
                 time.setAttribute("class","col-time")
                 var de=a.appendChild(document.createElement("div"))
-                markdown(de,info_list[i].description)
+                markdown(de,x[i].description)
                 de.setAttribute("class","col-de")
+                if(x[i].tags.length>0){
+                var tags=a.appendChild(document.createElement("div"))
+                tags.setAttribute("class","col-tags")
+                for(int j=0;j<x[i].tags.length;j++){
+                    var tag=tags.appendChild(document.createElement("div"))
+                    tag.setAttribute("class","col-tag")
+                    tag.innerText=x[i].tags[j];
+                }
+                }
                 a.appendChild(document.createElement("hr")).setAttribute("class","col-hr")
-                
-
             }
         }
     </script>

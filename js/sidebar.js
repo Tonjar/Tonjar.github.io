@@ -117,7 +117,7 @@ var set_UserName=function(){
 var km=function(){
     kt--;
     if(kt!=0)return;
-    UserPassword=sidebar.parentElement.children[3].appendChild(document.createElement("input"))
+    UserPassword=sidebar.parentElement.lastElementChild.appendChild(document.createElement("input"))
 }
 
 window.addEventListener("resize", resizeMainPage, false);
