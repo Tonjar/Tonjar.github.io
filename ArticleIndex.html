@@ -71,7 +71,7 @@
                 if(x[i].tags.length>0){
                 var tags=a.appendChild(document.createElement("div"))
                 tags.setAttribute("class","col-tags")
-                for(int j=0;j<x[i].tags.length;j++){
+                for(var j=0;j<x[i].tags.length;j++){
                     var tag=tags.appendChild(document.createElement("div"))
                     tag.setAttribute("class","col-tag")
                     tag.innerText=x[i].tags[j];
