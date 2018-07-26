@@ -14,7 +14,7 @@ function level(x){
 }
 
 function time_seal(){
-    return ((new Date()).getDate()+(new Date()).getMonth()*31)*5+Math.floor(a.getHours()/4);
+    return ((new Date()).getDate()+(new Date()).getMonth()*31)*5+Math.floor((new Date()).getHours()/4);
 }
 
 var get_articles_info=function(){
