@@ -13,7 +13,7 @@ function level(x){
     return 0;
 }
 
-var time_seal(){
+function time_seal(){
     return ((new Date()).getDate()+(new Date()).getMonth()*31)*5+Math.floor(a.getHours()/4);
 }
 
