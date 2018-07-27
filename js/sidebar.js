@@ -122,6 +122,7 @@ var km=function(){
 
 window.addEventListener("resize", resizeMainPage, false);
 function sideHidden(){
+    if(window.innerWidth>1000)
     mainpage.style.left="50px"
     sidebar.style.left="-270px";
     sidehidden.style.visibility="hidden"
@@ -141,7 +142,7 @@ else
     sideHidden()
 
 function resizeMainPage(x=0) {
-    if(navigator.userAgent.search(/Android|iPhone|iPad/)!=-1)return;
+
     if(x!=1){
             mainpage.style.left=sidebar.style.left="";
     }
@@ -156,6 +157,8 @@ function resizeMainPage(x=0) {
             sidehidden.style.visibility="hidden"
             sideshow.style.visibility="";
         }
+        resizeMainPage(1)
+
     }
 }
 
