@@ -21,6 +21,9 @@ var get_articles_info=function(){
     var query_articles = new AV.Query('articles');
     query_articles.limit(1000)
     query_articles.notEqualTo("title","公告")
+    query_articles.descending("updatedAt")
+    if(level()==0)query_articles.equalTo("tourist",true)
+    query_articles.equalTo("group2",true)
     query_articles.select(["title","tags","categories","description"])
     query_articles.find().then(function(articles){
         localStorage.articleInfoTime=time_seal();
@@ -77,13 +80,14 @@ var get_articleById=function(id){
             atr_t=atr.appendChild(document.createElement("a"))
             atr_t.innerText="EDIT"
             atr_t.href="edit.html?id="+id;
-            atr_t.setAttribute("class","article-time")
+            atr_t.setAttribute("class","article-EDIT")
             }
             atr.appendChild(document.createElement("hr")).setAttribute("class","article-title-line")
             atr_t=atr.appendChild(document.createElement("div"))
             atr_t.setAttribute("class","article-main")
             titles=markdown(atr_t,article.attributes.article)
             pagename="article"+id;
+            if(article.attributes.commit==true)
             apply_commit()
         }
     },function(error){

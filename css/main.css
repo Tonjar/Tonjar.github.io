@@ -318,7 +318,12 @@ margin:30px 10px;
     font-family: fantasy;
     height: 100%;
     position: absolute;
+    padding-top: 30px;
 }
+.col-year p{
+    margin:0;
+}
+
 .col-LIST{
 overflow:hidden;
 }
@@ -358,4 +363,13 @@ text-align: right;
     position: relative;
     top: 20px;
     color: #b292ff;
+    padding-left: 20px;
+}
+
+
+.icon {
+   width: 1em; height: 1em;
+   vertical-align: -0.15em;
+   fill: currentColor;
+   overflow: hidden;
 }
