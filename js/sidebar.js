@@ -141,6 +141,7 @@ else
     sideHidden()
 
 function resizeMainPage(x=0) {
+    if(navigator.userAgent.search(/Android|iPhone|iPad/)!=-1)return;
     if(x!=1){
             mainpage.style.left=sidebar.style.left="";
     }
@@ -156,7 +157,6 @@ function resizeMainPage(x=0) {
             sideshow.style.visibility="";
         }
     }
-
 }
 
 srolldiv=mainpage.parentElement.appendChild(document.createElement("div"))
