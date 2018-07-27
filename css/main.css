@@ -13,6 +13,7 @@
     width: 80%;
     left: 350px;
     top: 30px;
+    min-width: 640px;
 }
 
 .header-overlay{
@@ -155,26 +156,6 @@ a{
     cursor: default;
 }
 
-@media screen and (max-width: 1000px) {
-.sidebar{
-    position: fixed;
-    height: 90%;
-    width: 300px;
-    left: -270px;
-    top: 30px;
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    border-radius: 10px;
-    background:#fffbf3;
-
-}
-.mainpage{
-    position: absolute;
-    width: 80%;
-    left: 50px;
-    top: 30px;
-}
-
-}
 
 
 .commit{
@@ -295,6 +276,7 @@ margin:30px 10px;
     font-size: 13px;
     top: 5px;
     position: relative;
+top: -10px;
 }
 .article-title-line{
     border: 0;
@@ -319,9 +301,10 @@ margin:30px 10px;
     height: 100%;
     position: absolute;
     padding-top: 30px;
+    top: 40px;
 }
-.col-year p{
-    margin:0;
+.col-year p {
+    margin: 0px;
 }
 
 .col-LIST{
@@ -354,8 +337,6 @@ overflow:hidden;
 
 }
 .col-tags{
-text-align: right;
-    padding-right: 20px;
 }
 .col-tag{
     display: inline;
@@ -363,9 +344,14 @@ text-align: right;
     position: relative;
     top: 20px;
     color: #b292ff;
-    padding-left: 20px;
 }
-
+.col-tags svg {
+    display: inline;
+    width: 15px;
+    height: 15px;
+    position: relative;
+    top: 22px;
+}
 
 .icon {
    width: 1em; height: 1em;
@@ -373,3 +359,43 @@ text-align: right;
    fill: currentColor;
    overflow: hidden;
 }
+
+
+@print{
+.sidebar{
+    visibility:hidden;
+}
+.mainpage{
+    left: 0px;
+    top: 0px;
+    width: 100%;
+    border: 0px;
+}
+
+.commit{
+    visibility:hidden;
+}
+}
+
+
+@media screen and (max-width: 1000px) {
+.sidebar{
+    position: fixed;
+    height: 90%;
+    width: 300px;
+    left: -270px;
+    top: 30px;
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+    border-radius: 10px;
+    background:#fffbf3;
+
+}
+.mainpage{
+    left: 0px;
+    top: 0px;
+    min-width: 100%;
+    border: 0px;
+}
+
+}
+
