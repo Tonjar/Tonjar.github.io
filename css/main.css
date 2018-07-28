@@ -300,14 +300,13 @@ top: -10px;
     color: darkgrey;
     top: 15px;
 }
-.col-year{
+.col-year {
     width: 100px;
     font-size: xx-large;
     font-family: fantasy;
     height: 100%;
-    position: absolute;
+    position: relative;
     padding-top: 30px;
-    top: 40px;
 }
 .col-year p {
     margin: 0px;
@@ -317,11 +316,11 @@ top: -10px;
     text-align: left;
 overflow:hidden;
 }
-.col-list{
+.col-list {
     left: 100px;
     position: relative;
-    width:85%;
-    top: 30px;
+    width: 85%;
+    top: -100px;
     padding-bottom: 30px;
 }
 .col-EDIT{
@@ -448,3 +447,28 @@ visibility:hidden;
 
 }
 
+
+
+@media screen and (max-width: 430px) {
+.col-year {
+    width: 100%;
+    font-size: xx-large;
+    font-family: fantasy;
+    position: relative;
+    top: 0px;
+}
+.col-year p {
+    display:inline;
+    margin-right: 10px;
+}
+
+.col-list {
+    position: relative;
+    width: 100%;
+    padding-bottom: 30px;
+}
+.col-time {
+    font-size: medium;
+    display: block;
+}
+}

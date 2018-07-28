@@ -145,45 +145,44 @@ var km=function(){
 
 window.addEventListener("resize", resizeMainPage, false);
 function sideHidden(){
-    mainpage.style.left="50px"
     sidebar.style.left="-270px";
     sidehidden.style.visibility="hidden"
     sideshow.style.visibility="";
-    resizeMainPage(1)
+    resizeMainPage()
 }
 function sideShow(){
-    mainpage.style.left=""
     sidebar.style.left="20px";
     sidehidden.style.visibility=""
     sideshow.style.visibility="hidden";
-    resizeMainPage(1)
+    resizeMainPage()
 }
 if(window.innerWidth>1000)
     sideShow()
 else
     sideHidden()
 function opensidebar(){
+    sideShow()
     sidebar.style.visibility="visible";
     graydiv.style.visibility="visible";
     sidebar.style.left=""
 }
 graydiv.onclick=function(){
+    sideHidden();
     sidebar.style.visibility="";
     graydiv.style.visibility="hidden";
 
 }
-function resizeMainPage(x=0) {
-    if(sideshow.style.visibility=="hidden"&&window.innerWidth>1000){
-        document.getElementById("mainpage").style.width=window.innerWidth-400+"px";
-        graydiv.click()    
-    }
-    else if(window.innerWidth>1000){
+function resizeMainPage() {
+    if(window.innerWidth>1000){
+        mainpage.style.left=sidebar.offsetLeft+sidebar.offsetWidth+40+'px'
+        document.getElementById("mainpage").style.width=window.innerWidth-mainpage.offsetLeft-80+"px";
+        if(graydiv.style.visibility!="hidden")
         graydiv.click()    
     }
     else{
-        document.getElementById("mainpage").style.width=window.innerWidth-80+"px";
+        mainpage.style.left=""
+        document.getElementById("mainpage").style.width="100%"
     }
-    return;
 }
 
 
