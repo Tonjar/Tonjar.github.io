@@ -1,9 +1,32 @@
 var list=["主页","文章目录","游戏目录"]
 var href=["./index.html","./ArticleIndex.html","./GameIndex.html"]
 var descripion="数学！数据！算法！"
-sidebar=document.getElementById("sidebar")
+srolldiv=mainpage.parentElement.appendChild(document.createElement("div"))
+srolldiv.setAttribute("class","sroll-contrainer");
+sroll=srolldiv.appendChild(document.createElement("button"))
+sroll.setAttribute("class","sroll-bt");
+sroll.innerHTML="↑"
+sroll.onclick=function(){
+    window.scrollTo(window.scrollX,0)
+}
+window.onscroll=function(){
+    if(window.scrollY>200){
+        srolldiv.style.visibility="visible"
+    }
+    else
+        srolldiv.style.visibility="hidden"
+}
+
+upbar=document.getElementsByTagName("body")[0].appendChild(document.createElement("div"))
+upbar.setAttribute("class","upbar")
+graydiv=document.getElementsByTagName("body")[0].appendChild(document.createElement("div"))
+graydiv.setAttribute('class','graydiv')
+sidebar=document.getElementsByTagName("body")[0].appendChild(document.createElement("div"))
+sidebar.setAttribute("class","sidebar")
 overlay=sidebar.appendChild(document.createElement("div"))
 overlay.setAttribute('class','header-overlay')
+
+upbar.innerHTML="<svg class='icon upside-left' onclick='opensidebar()' aria-hidden='true'><use xlink:href='#icon-category'></use></svg><p></p><svg class='icon upside-right-icon' aria-hidden='true'><use xlink:href='#icon-category'></use></svg><svg class='icon upside-right-icon' aria-hidden='true'><use xlink:href='#icon-category'></use></svg>";
 
 sideshow=overlay.appendChild(document.createElement("p"))
 sidehidden=overlay.appendChild(document.createElement("p"))
@@ -122,7 +145,6 @@ var km=function(){
 
 window.addEventListener("resize", resizeMainPage, false);
 function sideHidden(){
-    if(window.innerWidth>1000)
     mainpage.style.left="50px"
     sidebar.style.left="-270px";
     sidehidden.style.visibility="hidden"
@@ -140,42 +162,28 @@ if(window.innerWidth>1000)
     sideShow()
 else
     sideHidden()
+function opensidebar(){
+    sidebar.style.visibility="visible";
+    graydiv.style.visibility="visible";
+    sidebar.style.left=""
+}
+graydiv.onclick=function(){
+    sidebar.style.visibility="";
+    graydiv.style.visibility="hidden";
 
+}
 function resizeMainPage(x=0) {
-
-    if(x!=1){
-            mainpage.style.left=sidebar.style.left="";
-    }
-    if(sideshow.style.visibility=="hidden"&&window.innerWidth>1000)
+    if(sideshow.style.visibility=="hidden"&&window.innerWidth>1000){
         document.getElementById("mainpage").style.width=window.innerWidth-400+"px";
-    else
+        graydiv.click()    
+    }
+    else if(window.innerWidth>1000){
+        graydiv.click()    
+    }
+    else{
         document.getElementById("mainpage").style.width=window.innerWidth-80+"px";
-    if(x!=1){
-        sidehidden.style.visibility=""
-        sideshow.style.visibility="hidden";
-        if(window.innerWidth<1000){
-            sidehidden.style.visibility="hidden"
-            sideshow.style.visibility="";
-        }
-        resizeMainPage(1)
-
     }
-}
-
-srolldiv=mainpage.parentElement.appendChild(document.createElement("div"))
-srolldiv.setAttribute("class","sroll-contrainer");
-sroll=srolldiv.appendChild(document.createElement("button"))
-sroll.setAttribute("class","sroll-bt");
-sroll.innerHTML="↑"
-sroll.onclick=function(){
-    window.scrollTo(window.scrollX,0)
-}
-window.onscroll=function(){
-    if(window.scrollY>200){
-        srolldiv.style.visibility="visible"
-    }
-    else
-        srolldiv.style.visibility="hidden"
+    return;
 }
 
 
