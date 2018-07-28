@@ -265,6 +265,7 @@ a{
 }
 
 .article{
+    text-align: left;
 margin:30px 10px;
 }
 
@@ -313,6 +314,7 @@ top: -10px;
 }
 
 .col-LIST{
+    text-align: left;
 overflow:hidden;
 }
 .col-list{
