@@ -573,6 +573,30 @@ AV.init({
     appKey: APp_KEY
 });
 
+task_inf=[]
+
+function get_all(){
+    var query=new AV.Query('tasks')
+    query.notEqualTo("deleted","true")
+    query.find().then(
+        function(ts){
+            for(var i=0;i<ts.length;i++){
+                var str=ts[0].attributes.info
+                task_inf.push([new_tast(JSON.parse(str)),ts[0]])
+            }
+        },
+        function(error){
+            alert(error)
+        }
+    )
+}
+
+function delete_task(i){
+    task_inf[i][0].style.visibility="hidden"
+    task_inf[i][1].save({
+            "deleted":"true"
+            })
+}
 
 tasks=AV.Object.extend("tasks")
 
@@ -582,13 +606,15 @@ function update(){
     task.save({
         "info":textbox.textContent
             })
+    task_inf.push([new_tast(testcase),task])
 }
 
 
 
 if(b==303726415403){
     set_list()
-    if(c==299018582185){
+    get_all()
+    if(c==274955906471){
     set_upate()
     }
 }
