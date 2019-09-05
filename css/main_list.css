@@ -40,7 +40,7 @@
 }
 
 .task p{
-    margin: 3px;
+    margin: -15px;
 }
 .date{
     position: relative;
@@ -62,4 +62,16 @@
 .errmsg{
     min-height:60px;
     color:red;
+}
+
+.delate_task{
+    margin: 0px;
+    padding: 0px;
+    position: relative;
+    top: -5px;
+    border: none;
+    color: black;
+    background: #f0f8ff00;
+    left: 64px;
+    outline:none;
 }
