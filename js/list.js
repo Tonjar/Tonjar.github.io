@@ -472,13 +472,16 @@ testcase={
     'day':0
 }
 var vl=[0,0,0,0,0,0,0]
-function new_tast(task){
+function new_tast(task,i){
     var task_div=day[task['day']].appendChild(document.createElement("div"))
     task_div.setAttribute("class","task")
     var q=task_div.appendChild(document.createElement("input"))
-    q.setAttribute("class","delate_task")
+    q.setAttribute("class","delate_task "+i)
     q.setAttribute("type","button")
     q.setAttribute("value","x")
+    q.onclick=function(t){
+        delete_task(parseInt(t.target.classList[1]))
+    }
     var p=task_div.appendChild(document.createElement("p"))
     p.innerHTML=task['text'];
     task_div.style.top=(task['start_time']-6)*38-vl[task['day']]-5+'px';
@@ -582,7 +585,7 @@ function get_all(){
         function(ts){
             for(var i=0;i<ts.length;i++){
                 var str=ts[i].attributes.info
-                task_inf.push([new_tast(JSON.parse(str)),ts[i]])
+                task_inf.push([new_tast(JSON.parse(str),task_inf.length),ts[i]])
             }
         },
         function(error){
@@ -606,7 +609,7 @@ function update(){
     task.save({
         "info":textbox.textContent
             })
-    task_inf.push([new_tast(testcase),task])
+    task_inf.push([new_tast(testcase,task_inf.length),task])
 }
 
 
