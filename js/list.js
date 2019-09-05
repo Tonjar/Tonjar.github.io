@@ -530,7 +530,7 @@ function setmsg(x){
 function convert(){
     try{
         testcase=JSON.parse(textbox.textContent)
-        setmsg("")
+        setmsg("success")
     }
     catch{
         setmsg("input error")
@@ -581,8 +581,8 @@ function get_all(){
     query.find().then(
         function(ts){
             for(var i=0;i<ts.length;i++){
-                var str=ts[0].attributes.info
-                task_inf.push([new_tast(JSON.parse(str)),ts[0]])
+                var str=ts[i].attributes.info
+                task_inf.push([new_tast(JSON.parse(str)),ts[i]])
             }
         },
         function(error){
