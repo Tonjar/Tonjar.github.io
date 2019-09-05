@@ -442,10 +442,15 @@ function set_list(){
     left_list=list.appendChild(document.createElement("div"))
     left_list.setAttribute("class","leftcol")
     var today=new Date()
-    var date=new Date(today-today.getDay()*1000*3600*24)
+    var date=new Date(today-(-1000*3600*24*(7-today.getDay())))
     for(var i=0;i<7;i++){
+        if(date.getDay()==today.getDay())
+            date=today
+
         day.push(list.appendChild(document.createElement("div")))
         day[i].setAttribute("class","col")
+        if(date.getDay()<today.getDay())
+            day[i].style.background="#f2f2f2"
         var div=day[i].appendChild(document.createElement("div"))
         div.setAttribute("class","date")
         div.innerHTML="<p>"+(date.getMonth()+1)+"/"+date.getDate()+"</p>"
@@ -533,7 +538,7 @@ function setmsg(x){
 function convert(){
     try{
         testcase=JSON.parse(textbox.textContent)
-        setmsg("success")
+        setmsg("ok!")
     }
     catch{
         setmsg("input error")
@@ -610,6 +615,7 @@ function update(){
         "info":textbox.textContent
             })
     task_inf.push([new_tast(testcase,task_inf.length),task])
+    setmsg("success")
 }
 
 
@@ -647,7 +653,6 @@ else{
         b=cal_AB(getCookie("pwd"),getCookie("username"),a);
         if(b==303726415403)
             location.reload()
-
     }
 }
 
