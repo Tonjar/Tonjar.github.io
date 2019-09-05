@@ -433,35 +433,36 @@ a=cal_AB(getCookie("username"),getCookie("pwd"),1000000007);
 b=cal_AB(getCookie("pwd"),getCookie("username"),a);
 c=cal_AB(getCookie("username"),getCookie("key"),a);
 
-if(b==303726415403){
-
-    if(c==299018582185){
-    
-    }
-}
-mainpage=document.getElementById("mainpage")
-list=mainpage.appendChild(document.createElement("div"))
-list.setAttribute("class","mainlist")
-left_list=list.appendChild(document.createElement("div"))
-left_list.setAttribute("class","leftcol")
 day=[]
-for(var i=0;i<7;i++){
+
+function set_list(){
+    mainpage=document.getElementById("mainpage")
+    list=mainpage.appendChild(document.createElement("div"))
+    list.setAttribute("class","mainlist")
+    left_list=list.appendChild(document.createElement("div"))
+    left_list.setAttribute("class","leftcol")
+    var today=new Date()
+    var date=new Date(today-today.getDay()*1000*3600*24)
+    for(var i=0;i<7;i++){
+        day.push(list.appendChild(document.createElement("div")))
+        day[i].setAttribute("class","col")
+        var div=day[i].appendChild(document.createElement("div"))
+        div.setAttribute("class","date")
+        div.innerHTML="<p>"+(date.getMonth()+1)+"/"+date.getDate()+"</p>"
+        date=new Date(date-(-1000*3600*24))
+    }
     day.push(list.appendChild(document.createElement("div")))
     day[i].setAttribute("class","col")
-    var div=day[i].appendChild(document.createElement("div"))
-    div.setAttribute("class","date")
-    div.innerHTML="<p>9/"+(i+1)+"</p>"
+
+    for(var i=6;i<24;i++){
+        var p=left_list.appendChild(document.createElement("p"))
+        p.innerHTML=i+":00";
+        p.setAttribute("class","leftcol_time")
+
+    }
 
 }
-day.push(list.appendChild(document.createElement("div")))
-day[i].setAttribute("class","col")
 
-for(var i=6;i<24;i++){
-    var p=left_list.appendChild(document.createElement("p"))
-    p.innerHTML=i+":00";
-    p.setAttribute("class","leftcol_time")
-
-}
 
 testcase={
     'start_time':13,
@@ -474,6 +475,10 @@ var vl=[0,0,0,0,0,0,0]
 function new_tast(task){
     var task_div=day[task['day']].appendChild(document.createElement("div"))
     task_div.setAttribute("class","task")
+    var q=task_div.appendChild(document.createElement("input"))
+    q.setAttribute("class","delate_task")
+    q.setAttribute("type","button")
+    q.setAttribute("value","x")
     var p=task_div.appendChild(document.createElement("p"))
     p.innerHTML=task['text'];
     task_div.style.top=(task['start_time']-6)*38-vl[task['day']]-5+'px';
@@ -483,34 +488,34 @@ function new_tast(task){
     return task_div;
 }
 
-new_tast(testcase)
-testcase["start_time"]=6
-new_tast(testcase)
-testcase["day"]=1
-new_tast(testcase)
-testcase["start_time"]=12
-new_tast(testcase)
-testcase["day"]=3
-new_tast(testcase)
-testcase["start_time"]=7
-testcase["last"]=4
-new_tast(testcase)
-testcase["day"]=5
-testcase["last"]=3
-new_tast(testcase)
+function set_upate(){
+    textbox=mainpage.appendChild(document.createElement("div"))
+    textbox.setAttribute("class","textbox")
+    textbox.setAttribute("contenteditable","true")
 
-var textbox=mainpage.appendChild(document.createElement("div"))
-textbox.setAttribute("class","textbox")
-textbox.setAttribute("contenteditable","true")
-
-textbox.textContent='{"start_time":9,"last":1,"bg":"#f1f1f1","text":"这个一个样例<br>","day":0}'
-var submit=mainpage.appendChild(document.createElement("input"))
-submit.setAttribute("value","update")
-submit.setAttribute("type","button")
+    textbox.textContent='{"start_time":9,"last":1,"bg":"#f1f1f1","text":"这个一个样例<br>","day":0}'
+    submit=mainpage.appendChild(document.createElement("input"))
+    submit.setAttribute("value","update")
+    submit.setAttribute("type","button")
 
 
-var errmsg=mainpage.appendChild(document.createElement("div"))
-errmsg.setAttribute("class","errmsg")
+    errmsg=mainpage.appendChild(document.createElement("div"))
+    errmsg.setAttribute("class","errmsg")
+    textbox.addEventListener("input",convert)
+
+    view_task=day[7].appendChild(document.createElement("div"))
+    view_task.setAttribute("class","task")
+    var q=view_task.appendChild(document.createElement("input"))
+    q.setAttribute("class","delate_task")
+    q.setAttribute("type","button")
+    q.setAttribute("value","x")
+
+    p=view_task.appendChild(document.createElement("p"))
+    view_task.style.top='-100px';
+    view_task.style.height='0px';
+
+}
+
 
 
 
@@ -545,12 +550,6 @@ function convert(){
     return true;
 }
 
-var view_task=day[7].appendChild(document.createElement("div"))
-view_task.setAttribute("class","task")
-
-var p=view_task.appendChild(document.createElement("p"))
-view_task.style.top='-100px';
-view_task.style.height='0px';
 
 
 function view(task){
@@ -558,10 +557,10 @@ function view(task){
     view_task.style.height=task['last']*38+'px';
     view_task.style.left=-1009+task['day']*144+"px"
     view_task.style.background=task['bg']
-    view_task.children[0].innerHTML=task['text']
+    view_task.children[1].innerHTML=task['text']
 }
 
-textbox.addEventListener("input",convert)
+
 
 var APp_ID = 'Dc3PSs8jzsq39yYivB1XQlDi-MdYXbMMI';
 var APp_KEY = 'hOwNUdXO7faFRSPSrAqsb7cP';
@@ -582,4 +581,39 @@ function update(){
         "info":textbox.textContent
             })
 }
+
+
+
+if(b==303726415403){
+    set_list()
+    if(c==299018582185){
+    set_upate()
+    }
+}
+else{
+    div=mainpage.appendChild(document.createElement("div"))
+    div.setAttribute("contenteditable","true")
+    div.setAttribute("class","textbox")
+    div.style.background="#f0f8ff00"
+    div.style.border="none"
+    bt=mainpage.appendChild(document.createElement("input"))
+    bt.setAttribute("type","button")
+    bt.setAttribute("value","submit")
+    bt.onclick=function(){
+        try{
+            a=JSON.parse(div.textContent)
+            list=["username","key","pwd"]
+            for(var i=0;i<list.length;i++){
+                if(a[list[i]]!=undefined){
+                setCookie(list[i],a[list[i]])
+                }
+            }
+        }
+        catch{
+            console.log("error")
+        }
+    }
+}
+
+
 
