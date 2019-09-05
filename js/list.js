@@ -643,6 +643,11 @@ else{
         catch{
             console.log("error")
         }
+        a=cal_AB(getCookie("username"),getCookie("pwd"),1000000007);
+        b=cal_AB(getCookie("pwd"),getCookie("username"),a);
+        if(b==303726415403)
+            location.reload()
+
     }
 }
 
