@@ -514,6 +514,9 @@ function set_upate(){
     view_task.style.top='-100px';
     view_task.style.height='0px';
 
+    submit.addEventListener("click",update)
+
+
 }
 
 
@@ -570,7 +573,6 @@ AV.init({
     appKey: APp_KEY
 });
 
-submit.addEventListener("click",update)
 
 tasks=AV.Object.extend("tasks")
 
