@@ -1,13 +1,13 @@
 .mainpage{
     position: absolute;
     top: 50px;
-    left: 60px;
 }
 
 .mainlist{
     background: #7fffd400;
     width: 80em;
     height: 700px;    
+    padding-top: 30px;
 }
 .col{
     width: 140px;
@@ -44,9 +44,10 @@
 }
 .date{
     position: relative;
-    left: 55px;
+    left: 5px;
     top: -30px;
 }
+    
 .date p{
     font-size: 1.3em;
     display: inline;
@@ -57,11 +58,16 @@
     background: aliceblue;
     border: 1px solid beige;
     outline:none;
+    text-align: left;
+    display: inline-block;
+    margin-right: 10px;
 }
 
 .errmsg{
     min-height:60px;
     color:red;
+    display: inline-block;
+    margin-left: 50px;
 }
 
 .delate_task{
@@ -74,4 +80,8 @@
     background: #f0f8ff00;
     left: 64px;
     outline:none;
+}
+a{
+    text-decoration: none;
+color:black;
 }
