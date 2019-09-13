@@ -457,8 +457,8 @@ function set_list(){
         date=new Date(date-(-1000*3600*24))
     }
     day.push(list.appendChild(document.createElement("div")))
-    day[i].setAttribute("class","col")
-
+    day[7].setAttribute("class","col")
+    day[7].style.width="10px"
     for(var i=6;i<24;i++){
         var p=left_list.appendChild(document.createElement("p"))
         p.innerHTML=i+":00";
