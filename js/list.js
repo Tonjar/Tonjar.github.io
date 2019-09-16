@@ -493,9 +493,9 @@ function new_tast(task,i){
     var p=task_div.appendChild(document.createElement("p"))
     p.innerHTML=task['text'];
     if(task['day']!=7)
-        task_div.style.top=(task['start_time']-6)*38-vl[task['day']]+24+'px';
+        task_div.style.top=(task['start_time']-6)*38-vl[task['day']]-4+'px';
     else
-        task_div.style.top=(task['start_time']-6)*38-vl[task['day']]-16+'px';
+        task_div.style.top=(task['start_time']-6)*38-vl[task['day']]-16-28+'px';
     task_div.style.height=task['last']*38+'px';
     vl[task['day']]=vl[task['day']]+task['last']*38+2
     task_div.style.background=task['bg']
@@ -525,7 +525,7 @@ function set_upate(){
     q.setAttribute("value","x")
 
     p=view_task.appendChild(document.createElement("p"))
-    view_task.style.top='-100px';
+    view_task.style.top='-200px';
     view_task.style.height='0px';
 
     submit.addEventListener("click",update)
@@ -570,7 +570,7 @@ function convert(){
 
 
 function view(task){
-    view_task.style.top=(task['start_time']-6)*38+24+'px'
+    view_task.style.top=(task['start_time']-6)*38-4+'px'
     view_task.style.height=task['last']*38+'px';
     view_task.style.left=-1009+task['day']*144+"px"
     view_task.style.background=task['bg']
