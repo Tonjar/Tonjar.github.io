@@ -459,6 +459,9 @@ function set_list(){
     day.push(list.appendChild(document.createElement("div")))
     day[7].setAttribute("class","col")
     day[7].style.width="10px"
+    var div=day[i].appendChild(document.createElement("div"))
+    div.setAttribute("class","date")
+    div.innerHTML="<p>TODO_LIST</p>"
     for(var i=6;i<24;i++){
         var p=left_list.appendChild(document.createElement("p"))
         p.innerHTML=i+":00";
@@ -476,7 +479,7 @@ testcase={
     'text':'测试用例<br>13:00-15:00<br>地点',
     'day':0
 }
-var vl=[0,0,0,0,0,0,0]
+var vl=[0,0,0,0,0,0,0,0]
 function new_tast(task,i){
     var task_div=day[task['day']].appendChild(document.createElement("div"))
     task_div.setAttribute("class","task")
@@ -489,7 +492,10 @@ function new_tast(task,i){
     }
     var p=task_div.appendChild(document.createElement("p"))
     p.innerHTML=task['text'];
-    task_div.style.top=(task['start_time']-6)*38-vl[task['day']]-5+'px';
+    if(task['day']!=7)
+        task_div.style.top=(task['start_time']-6)*38-vl[task['day']]+24+'px';
+    else
+        task_div.style.top=(task['start_time']-6)*38-vl[task['day']]-16+'px';
     task_div.style.height=task['last']*38+'px';
     vl[task['day']]=vl[task['day']]+task['last']*38+2
     task_div.style.background=task['bg']
@@ -571,7 +577,7 @@ function view(task){
     view_task.children[1].innerHTML=task['text']
 }
 
-
+if(location.host=="tonjar.github.io"){
 
 var APp_ID = 'Dc3PSs8jzsq39yYivB1XQlDi-MdYXbMMI';
 var APp_KEY = 'hOwNUdXO7faFRSPSrAqsb7cP';
@@ -580,7 +586,9 @@ AV.init({
     appId: APp_ID,
     appKey: APp_KEY
 });
+tasks=AV.Object.extend("tasks")
 
+}
 task_inf=[]
 
 function get_all(){
@@ -606,7 +614,6 @@ function delete_task(i){
             })
 }
 
-tasks=AV.Object.extend("tasks")
 
 function update(){
     if(convert()==false)return false;
