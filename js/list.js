@@ -1,3 +1,5 @@
+DEBUG=0;
+
 /*
  * A JavaScript implementation of the RSA Data Security, Inc. MD5 Message
  * Digest Algorithm, as defined in RFC 1321.
@@ -458,10 +460,13 @@ function set_list(){
     }
     day.push(list.appendChild(document.createElement("div")))
     day[7].setAttribute("class","col")
-    day[7].style.width="10px"
     var div=day[i].appendChild(document.createElement("div"))
     div.setAttribute("class","date")
     div.innerHTML="<p>TODO_LIST</p>"
+    day.push(list.appendChild(document.createElement("div")))
+    day[8].setAttribute("class","col")
+    day[8].style.width="10px"
+
     for(var i=6;i<24;i++){
         var p=left_list.appendChild(document.createElement("p"))
         p.innerHTML=i+":00";
@@ -492,10 +497,7 @@ function new_tast(task,i){
     }
     var p=task_div.appendChild(document.createElement("p"))
     p.innerHTML=task['text'];
-    if(task['day']!=7)
-        task_div.style.top=(task['start_time']-6)*38-vl[task['day']]-4+'px';
-    else
-        task_div.style.top=(task['start_time']-6)*38-vl[task['day']]-16-28+'px';
+    task_div.style.top=(task['start_time']-6)*38-vl[task['day']]-15+'px';
     task_div.style.height=task['last']*38+'px';
     vl[task['day']]=vl[task['day']]+task['last']*38+2
     task_div.style.background=task['bg']
@@ -517,7 +519,7 @@ function set_upate(){
     errmsg.setAttribute("class","errmsg")
     textbox.addEventListener("input",convert)
 
-    view_task=day[7].appendChild(document.createElement("div"))
+    view_task=day[8].appendChild(document.createElement("div"))
     view_task.setAttribute("class","task")
     var q=view_task.appendChild(document.createElement("input"))
     q.setAttribute("class","delate_task")
@@ -570,9 +572,9 @@ function convert(){
 
 
 function view(task){
-    view_task.style.top=(task['start_time']-6)*38-4+'px'
+    view_task.style.top=(task['start_time']-6)*38+14+'px'
     view_task.style.height=task['last']*38+'px';
-    view_task.style.left=-1009+task['day']*144+"px"
+    view_task.style.left=-1009-144+task['day']*144+"px"
     view_task.style.background=task['bg']
     view_task.children[1].innerHTML=task['text']
 }
@@ -625,9 +627,11 @@ function update(){
     setmsg("success")
 }
 
-
-
-if(b==303726415403){
+if(DEBUG==1){
+    set_list();
+    set_upate();
+}
+else if(b==303726415403){
     set_list()
     get_all()
     if(c==274955906471){
