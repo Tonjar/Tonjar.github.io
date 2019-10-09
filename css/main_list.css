@@ -40,7 +40,9 @@
 }
 
 .task p{
-    margin: -15px;
+    margin: 0px;
+    width: 145px;
+    margin-top: -15px;
 }
 .date{
     position: relative;
