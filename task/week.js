@@ -10,7 +10,7 @@ view_task_div.setAttribute("class","task")
 view_task_text=view_task_div.appendChild(document.createElement("div"))
 view_task_text.setAttribute("class","task_msg")
 view_task_div.style.width="124px"
-view_task_div.style["border-left"]="2px solid whitve"
+view_task_div.style["border-left"]="2px solid white"
 
 tasks=[] //[ [sunday_date,[0,1,2...6]],[ ,[[],[],[],...,[]]]  ]
 tasks_l=AV.Object.extend("tjtasks")
