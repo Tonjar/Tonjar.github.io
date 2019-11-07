@@ -1,0 +1,28 @@
+div=mainpage.appendChild(document.createElement("div"))
+div.setAttribute('class','login_div')
+div.appendChild(document.createElement('p')).innerHTML='username:'
+username=div.appendChild(document.createElement('input'))
+div.appendChild(document.createElement('p')).innerHTML='password:'
+pwd=div.appendChild(document.createElement('input'))
+div.appendChild(document.createElement('p')).innerHTML='append:'
+append=div.appendChild(document.createElement('input'))
+
+bt=div.appendChild(document.createElement("input"))
+bt.setAttribute("type","button")
+bt.setAttribute("value","submit")
+bt.setAttribute('class','submit')
+bt.onclick=function(){
+    try{
+        setCookie('username',Hash(username.value))
+        setCookie('key',Hash(append.value))
+        setCookie('pwd',Hash(pwd.value))
+    }
+    catch{
+        console.log("error")
+    }
+    a=geta();
+    b=getb();
+    c=getc();
+    if(b==BTrue)
+        location.reload()
+}

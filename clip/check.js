@@ -1,0 +1,16 @@
+body=document.getElementsByTagName('body')[0]
+body.removeChild(body.children[1])
+body.removeChild(body.children[1])
+if(b==BTrue){
+    s=body.appendChild(document.createElement('script'))
+    s.setAttribute('src','setting.js')
+    s=body.appendChild(document.createElement('script'))
+    s.setAttribute('src','clip.js')
+}
+else{
+    s=body.appendChild(document.createElement('script'))
+    s.setAttribute('src','../com/login.js')
+    c=body.appendChild(document.createElement('link'))
+    c.setAttribute('rel','stylesheet')
+    c.setAttribute('href','../com/login.css')
+}

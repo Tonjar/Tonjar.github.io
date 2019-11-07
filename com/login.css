@@ -1,0 +1,27 @@
+.login_div{
+    margin: 0px;
+    background: white;
+    width: 250px;
+    padding: 0px;
+    margin-top: 20px;
+    padding-top: 15px;
+    display: inline-block;
+    box-shadow: 1px 1px 3px #888888;
+    text-align: left;
+    border-radius: 10px;
+}
+.login_div p{
+    display: inline-block;
+    width: 100px;
+    margin: 0px;
+    margin-top: 10px;
+    padding-left: 10px;
+}
+body{
+    text-align: center;
+}
+
+.submit{
+    display: block;
+    margin: 20px;
+}

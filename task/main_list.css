@@ -1,0 +1,270 @@
+.mainpage{
+    height: 100%;
+    display: inline-block;
+}
+
+.rotate{
+    top:500px;
+}
+
+.topleftcol{
+
+    width: 1050px;
+    height: 575px;
+    display: inline-block;
+}
+
+.toprightcol{
+
+    width: 350px;
+    height: 575px;
+    vertical-align: top;
+    display: inline-block;
+    overflow: hidden;
+}
+
+
+
+.ideatag{
+    display: block;
+    color: aliceblue;
+    position: relative;
+    width: 10px;
+    height: 10px;
+    background: #ffffff;
+    border-radius: 10px;
+}
+
+.bottomcol{
+    background: #fef0ff;
+    width: 1440px;
+    height: 236px;
+    display: inline-block;
+}
+
+body,html{
+    height: 95%;
+    margin: 0px;
+}
+
+
+.mainlist{
+    background: #7fffd400;
+    width: 80em;
+    height: 700px;    
+    padding-top: 30px;
+}
+.col{
+    width: 136px;
+    height: 540px;
+    background: #ffebcd00;
+    display: inline-block;
+    border-left: grey 1px dotted;
+    vertical-align: top;
+}
+
+.leftcol{
+    display: inline-block;
+    width: 75px;
+    background: #00ffff00;
+    height: 700px;
+    margin-right: 10px;
+    position: relative;
+    margin-top: -25px;
+}
+
+.control_panel{
+    width: 85px;
+    padding: 0px;
+    padding-left: 4px;
+    margin: 0px;
+    margin-bottom: 10px;
+}
+
+.leftcol_time{
+    font-size: 0.9em;
+    margin-left: 27px;
+    margin-bottom: 10px;
+    margin-top: 0px;
+}
+.task{
+    width: 126px;
+    position: relative;
+    overflow: hidden;
+    padding: 0px 5px;
+}
+
+.task_msg{
+    overflow: scroll;
+    height: 100%;
+    width: 100%;
+    padding-right: 15px;
+    word-break: break-all;
+}
+
+.task p{
+    margin: -15px;
+}
+.date{
+    position: relative;
+    top: -25px;
+    text-align: center;
+}
+    
+.date p{
+    font-size: 1.1em;
+    display: inline;
+}
+.textbox{
+    width: 500px;
+    min-height: 60px;
+    background: aliceblue;
+    border: 1px solid beige;
+    outline:none;
+    text-align: left;
+    display: inline-block;
+    margin-right: 10px;
+}
+
+.errmsg{
+    min-height:60px;
+    color:red;
+    display: inline-block;
+    margin-left: 50px;
+}
+
+.delate_task{
+    margin: 0px;
+    padding: 0px;
+    position: relative;
+    top: -5px;
+    border: none;
+    color: black;
+    background: #f0f8ff00;
+    left: 64px;
+    outline:none;
+}
+a{
+    text-decoration: none;
+color:black;
+}
+/* 
+
+///////////////////////////////////////////////////////////////
+*/
+
+.small_color{
+    height: 20px;
+    width: 20px;
+    display: inline-block;
+    border-radius: 4px;
+    margin: 1px;
+    margin-top: -3px;
+}
+
+.selected_color_div{
+    display: inline-block;
+    vertical-align: middle;
+    padding-left: 20px;
+    position: relative;
+    top: -15px;
+
+}
+
+.selected_color_text{
+    display: inline-block;
+    width: 150px;
+    border-bottom: 1px solid gray;
+    position: relative;
+    margin-left: 10px;
+    top: -5px;
+    outline: none;
+
+}
+
+.idea_color_div{
+    width: 110px;
+    border-right: 1px solid #dadada; 
+    margin-left: 10px;
+    margin-top: 20px;
+    padding-right: 20px;
+    display: inline-block;
+}
+
+.idea_task_list{
+    width: 100%;
+    height: 500px;
+    border-top: 1px solid #dadada;
+    margin-left: 3px;
+    text-align: left;
+    overflow: scroll;
+    padding-right: 10px;
+    padding-top: 1px;
+}
+
+.idea_card{
+    width: 140px;
+    min-height: 70px;
+    padding: 10px;
+    margin: 10px;
+    margin-right: 5px;
+    margin-bottom: 0px;
+    border-radius: 10px;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.2), 0 1px 2px 0 rgba(0, 0, 0, 0.19);
+    display: inline-block;
+    vertical-align: top;
+    outline: none;
+}
+.add_new_idea{
+    outline: none;
+    background: #72c396;
+    color: #fff;
+    font-size: 20px;
+}
+
+.idea_sublist{
+    width: 175px;
+    display: inline-block;
+    vertical-align: top;
+    padding-bottom: 10px;
+}
+
+.drag_div{
+    position: absolute;
+}
+
+.idea_setting_div{
+    position: relative;
+    background: white;
+    top: -500px;
+    height: 500px;
+    padding-top: 20px;
+}
+
+.hidden{
+    visibility: hidden;
+}
+
+.idea_panel_bt{
+    display: block;
+    margin-left: 30px;
+    font-size: 1.2em;
+    margin-top: 13px;
+    margin-right: 65px;
+}
+
+.idea_setting_div p{
+    display: inline-block;
+    margin: 5px;
+    margin-right: 30px;
+    margin-left: 50px;
+}
+
+.idea_panel{
+    display: inline-block;
+    vertical-align: bottom;
+}
+
+.idea_setting_div input{
+    outline: none;
+}
