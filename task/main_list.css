@@ -236,9 +236,11 @@ color:black;
 .idea_setting_div{
     position: relative;
     background: white;
-    top: -500px;
-    height: 500px;
-    padding-top: 20px;
+    top: -501px;
+    height: 501px;
+    overflow: scroll;
+    padding-right: 10px;
+    width: 100%;
 }
 
 .hidden{
