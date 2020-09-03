@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+ <!-- <link rel="shortcut icon"type="image/x-icon" href="img/Tonjar.ico"media="screen" /> -->
+ 
+<meta http-equiv="X-UA-Compatible" content="chrome=1">
+<meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <!-- <link rel="dns-prefetch" href="https://tonjar.github.io"> -->
+  <title>石头！剪刀！布！</title>
+<meta name="viewport" content="width=device-width">
+<!-- <script src="//cdn1.lncld.net/static/js/3.6.0/av-min.js"></script>
+<script src="js/base.js"></script>
+ <script src="./js/iconfont.js"></script> -->
+
+ <!-- <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="css/markdown.css"> -->
+  <style>
+      div img{
+          width: 100px;
+          height: 100px;
+          margin-right: 30px;
+          border:10px solid white;
+      }
+      .leftcol{
+        display: inline-block;
+        vertical-align: middle;
+        margin: 30px;
+      }
+      .rightcol{
+        display: inline-block;
+        vertical-align: middle;
+      }
+      .mainpage{
+        text-align: center;
+        margin-top: 200px;  
+      }
+  </style>
+</head>
+<body>
+
+    <div class="mainpage"id="mainpage">
+        <div class="leftcol">
+            <div id='computer'>
+                <img id="c" src="./img/R.png" style="margin-bottom: 20px;width: 150px;height: 150px;">
+            </div>
+            <div id='human'>
+                <img src='./img/R.png' onclick="guess(0)"/>
+                <img src='./img/S.png' onclick="guess(1)"/>
+                <img src='./img/P.png' onclick="guess(2)"/>
+            </div>
+        </div>
+        <div class="rightcol">
+            <p id="info"></p>
+        </div>
+    </div>
+
+    <script>
+        c=document.getElementById('c')
+        info=document.getElementById('info')
+        human=document.getElementById('human')
+        rounds=0
+        G=setInterval(function(){
+            S="./img/"+["R","S","P"][Math.floor(Math.random()*3)]+".png"
+            c.setAttribute('src',S)
+        },70)
+        wins=[0,0,0]
+        cnts=[]
+        super_p=[1,2,3,4,5]
+        for(var i=0;i<super_p.length;i+=1){
+            cnts[super_p[i]]=[[],0,0,3,0]
+            for(var j=0;j<super_p[i];j+=1){
+                cnts[super_p[i]][3]*=3;
+            }
+        }
+        cnts[1][0]=[66,48,23,45,97,59,25,56,68]
+        cnts[2][0]=[30,27,11,10,29,11,5,8,12,25,14,8,20,44,35,10,17,33,12,9,6,17,26,15,12,33,25]
+        cnts[3][0]=[14,11,7,3,21,5,2,3,8,6,3,3,4,16,11,4,4,4,2,4,,2,5,3,,9,4,13,11,3,5,6,5,3,4,3,11,7,4,13,17,16,4,11,22,3,4,5,6,5,8,8,16,11,5,6,3,4,4,3,2,3,3,10,6,3,5,13,10,4,4,9,9,3,2,11,18,6,5,10,12]
+
+        //统计最近胜率
+        stats=[5,10,50,100]
+        win_stats=[0,0,0,0]
+        his=[]
+
+
+        function model_predict(k){
+            var i=(cnts[k][2]*3)%cnts[k][3]
+            var p=[]
+            for(var j=0;j<3;j+=1){
+                p[j]=cnts[k][0][i+j]==undefined?1:cnts[k][0][i+j]
+            }
+            var s=p[0]+p[1]+p[2]
+            p=[p[0]/s,p[1]/s,p[2]/s]
+            s=Math.random()
+            if(s<p[0])return [2,p]
+            if(s<p[0]+p[1])return [0,p]
+            return [1,p]
+        }
+        function computer_guess_1(){
+            var choices=[0,0,0]
+            for(var i=0;i<super_p.length;i+=1){
+                var perdict=model_predict(super_p[i])
+                choices[perdict[0]]+=1 
+                console.log(super_p[i]+"预测：石头："+parseInt(perdict[1][0]*100)+"%;剪刀:"+parseInt(perdict[1][1]*100)+"%;布："+parseInt(perdict[1][2]*100)+"%;建议："+['石头','剪刀','布'][perdict[0]]+";当前胜率："+parseInt(cnts[super_p[i]][4]*100/rounds)+"%;")
+            }
+            if(choices[0]>choices[1]&&choices[0]>choices[2])return 0;
+            if(choices[1]>choices[2])return 1;
+            return 2
+        }
+        function computer_guess_2(){
+            if(rounds==0){
+                return model_predict(super_p[0])[0]
+            }
+            var rand=Math.random()
+            var rsum=0
+            for(var i=0;i<super_p.length;i++){
+                k=super_p[i];
+                rsum+=cnts[k][4]/rounds
+                if(rand<rsum){
+                    return model_predict(k)[0]
+                }
+            }
+            return model_predict(super_p[super_p.length-1])[0]
+        }
+        function computer_guess_3(){
+            if(rounds==0){
+                return model_predict(super_p[0])[0]
+            }
+            var max_p=super_p[0];
+            for(var i=0;i<super_p.length;i++){
+                k=super_p[i];
+                if(cnts[k][4]>cnts[max_p][4]){
+                    max_p=k
+                }
+            }
+            return model_predict(max_p)[0]
+        }
+        computer_guess=computer_guess_3
+
+        function update(x){
+            for(var i=0;i<super_p.length;i+=1){
+                var k=super_p[i]
+                var perdict=model_predict(k)
+                if((perdict[0]-x+3)%3==2){
+                    cnts[k][4]+=1
+                }
+                cnts[k][1]+=1
+                cnts[k][2]=(cnts[k][2]*3+x)%cnts[k][3]
+                if(cnts[k][1]<k){
+                    continue;
+                }
+                cnts[k][0][cnts[k][2]]=cnts[k][0][cnts[k][2]]==undefined?2:cnts[k][0][cnts[k][2]]+1
+            }
+        }
+        function guess(x){
+            rounds+=1
+            for(var i=0;i<3;i+=1)
+                human.children[i].style="border-color:white;"
+            clearInterval(G)
+            var cx=computer_guess()
+            update(x)
+            wins[(cx-x+3)%3]+=1//0：平 2：胜 1：负
+            S="./img/"+["R","S","P"][cx]+".png"
+            c.setAttribute('src',S)
+            his[rounds]=(cx-x+3)%3
+            if((cx-x+3)%3==0){
+                human.children[x].style="border-color:#ffe300;"
+            }
+            else if((cx-x+3)%3==1){
+                human.children[x].style="border-color:lightgreen;"
+            }
+            else{
+                human.children[x].style="border-color:#ffa4a4;"
+                for(var i=0;i<win_stats.length;i++){
+                    win_stats[i]+=1
+                }
+            }
+            info.innerHTML="机器：<br>"+"胜："+wins[2]+"；平："+wins[0]+"；负："+wins[1]+"；<span style='color:lightcoral'>胜率："+parseInt(wins[2]*100/(wins[0]+wins[1]+wins[2]))+"%</span>"
+            for(var i=0;i<stats.length;i++){
+                if(rounds<stats[i])break;
+                if(his[rounds-stats[i]]==2)win_stats[i]-=1;
+                info.innerHTML+="<br>最近"+stats[i]+"局胜率"+parseInt(win_stats[i]*100/stats[i])+"%"
+            }
+            G=setTimeout(function(){
+                for(var i=0;i<3;i+=1)
+                    human.children[i].style="border-color:white;"
+                G=setInterval(function(){
+                    S="./img/"+["R","S","P"][Math.floor(Math.random()*3)]+".png"
+                    c.setAttribute('src',S)
+                },70)
+            },2000)
+        }
+        document.onkeydown=function(e){
+            if(e.key==1)guess(0)
+            if(e.key==2)guess(1)
+            if(e.key==3)guess(2)
+        }
+    </script>
+</body>
+</html>
+
+
