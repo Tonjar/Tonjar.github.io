@@ -1,5 +1,5 @@
-var list=["主页","文章目录","游戏目录"]
-var href=["./index.html","./ArticleIndex.html","./GameIndex.html"]
+var list=["主页","文章目录","游戏目录","任务计划","rss_flow(unfinished)"]
+var href=["./index.html","./ArticleIndex.html","./GameIndex.html","./todolist.html","./ifo.html"]
 var descripion="数学！数据！算法！"
 srolldiv=mainpage.parentElement.appendChild(document.createElement("div"))
 srolldiv.setAttribute("class","sroll-contrainer");

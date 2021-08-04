@@ -627,45 +627,49 @@ function update(){
     setmsg("success")
 }
 
-if(DEBUG==1){
-    set_list();
-    set_upate();
-}
-else if(b==303726415403){
-    set_list()
-    get_all()
-    if(c==274955906471){
-    set_upate()
-    }
-}
-else{
-    div=mainpage.appendChild(document.createElement("div"))
-    div.setAttribute("contenteditable","true")
-    div.setAttribute("class","textbox")
-    div.style.background="#f0f8ff00"
-    div.style.border="none"
-    bt=mainpage.appendChild(document.createElement("input"))
-    bt.setAttribute("type","button")
-    bt.setAttribute("value","submit")
-    bt.onclick=function(){
-        try{
-            a=JSON.parse(div.textContent)
-            list=["username","key","pwd"]
-            for(var i=0;i<list.length;i++){
-                if(a[list[i]]!=undefined){
-                setCookie(list[i],a[list[i]])
-                }
-            }
-        }
-        catch{
-            console.log("error")
-        }
-        a=cal_AB(getCookie("username"),getCookie("pwd"),1000000007);
-        b=cal_AB(getCookie("pwd"),getCookie("username"),a);
-        if(b==303726415403)
-            location.reload()
-    }
-}
+set_list()
+get_all()
+// set_upate()
+
+// if(DEBUG==1){
+//     set_list();
+//     set_upate();
+// }
+// else if(b==303726415403){
+//     set_list()
+//     get_all()
+//     if(c==274955906471){
+//     set_upate()
+//     }
+// }
+// else{
+//     div=mainpage.appendChild(document.createElement("div"))
+//     div.setAttribute("contenteditable","true")
+//     div.setAttribute("class","textbox")
+//     div.style.background="#f0f8ff00"
+//     div.style.border="none"
+//     bt=mainpage.appendChild(document.createElement("input"))
+//     bt.setAttribute("type","button")
+//     bt.setAttribute("value","submit")
+//     bt.onclick=function(){
+//         try{
+//             a=JSON.parse(div.textContent)
+//             list=["username","key","pwd"]
+//             for(var i=0;i<list.length;i++){
+//                 if(a[list[i]]!=undefined){
+//                 setCookie(list[i],a[list[i]])
+//                 }
+//             }
+//         }
+//         catch{
+//             console.log("error")
+//         }
+//         a=cal_AB(getCookie("username"),getCookie("pwd"),1000000007);
+//         b=cal_AB(getCookie("pwd"),getCookie("username"),a);
+//         if(b==303726415403)
+//             location.reload()
+//     }
+// }
 
 
 

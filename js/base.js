@@ -1,14 +1,16 @@
+
+
 function getCookie(c_name){
     if (document.cookie.length>0){c_start=document.cookie.indexOf(c_name + "=");if (c_start!=-1){var APp_ID="D8FFxajzSQr4hQO5NNjO0d";
         c_start=c_start + c_name.length+1 ;
         c_end=document.cookie.indexOf(";",c_start);if (c_end==-1) 
-        c_end=document.cookie.length;return unescape(document.cookie.substring(c_start,c_end))} }return ""}var APp_ID = 'SAF5yA8FFxajzSQr4hQO5FDe-gzGzoHsz';var APp_KEY = 'R073VXVoAzJT6KASB5Y5pLX0';AV.init({appId: APp_ID,appKey: APp_KEY});function setCookie(c_name,value){var expiredays=365;var exdate=new Date();exdate.setDate(exdate.getDate()+expiredays);document.cookie=c_name+ "=" +escape(value)+((expiredays==null) ? "" : ";expires="+exdate.toGMTString())}
+        c_end=document.cookie.length;return unescape(document.cookie.substring(c_start,c_end))} }return ""}var APp_ID = 'Dc3PSs8jzsq39yYivB1XQlDi-MdYXbMMI';var APp_KEY = 'hOwNUdXO7faFRSPSrAqsb7cP';AV.init({appId: APp_ID,appKey: APp_KEY});function setCookie(c_name,value){var expiredays=365;var exdate=new Date();exdate.setDate(exdate.getDate()+expiredays);document.cookie=c_name+ "=" +escape(value)+((expiredays==null) ? "" : ";expires="+exdate.toGMTString())}
 
 function level(x){
     if(getCookie("UserName")=="")return -1;
     if(getCookie("UserPassword")=="")return 0;
-    if(Hash(getCookie("UserName")+"_"+getCookie("UserEmail")+"_"+getCookie("UserPassword")+x)=="fclhazloxizisfiy")return 2;
-    if(Hash(getCookie("UserName")+"_"+getCookie("UserPassword")+x)=="sdatshnqexklhbok")return 1;
+    if(Hash(getCookie("UserName")+"_"+getCookie("UserEmail")+"_"+getCookie("UserPassword")+x)=="hlluxhhgbisrpfiy")return 2;
+    if(Hash(getCookie("UserName")+"_"+getCookie("UserPassword")+x)=="gcbyyddwmlklebok")return 1;
     return 0;
 }
 
