@@ -9,8 +9,8 @@ function getCookie(c_name){
 function level(x){
     if(getCookie("UserName")=="")return -1;
     if(getCookie("UserPassword")=="")return 0;
-    if(Hash(getCookie("UserName")+"_"+getCookie("UserEmail")+"_"+getCookie("UserPassword")+x)=="mfawpkjmgyhriokz")return 2;
-    if(Hash(getCookie("UserName")+"_"+getCookie("UserPassword")+x)=="wvfpnuxthzkzomzy")return 1;
+    if(Hash(getCookie("UserName")+"_"+getCookie("UserEmail")+"_"+getCookie("UserPassword")+x)=="fclhazloxizisfiy")return 2;
+    if(Hash(getCookie("UserName")+"_"+getCookie("UserPassword")+x)=="sdatshnqexklhbok")return 1;
     return 0;
 }
 
